@@ -14,7 +14,6 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 class Driver(object):
     def __init__(self, hub, instance_counter=1):
-        # platform options: https://saucelabs.com/products/platform-configurator
         self.instance_counter = instance_counter
         self.hub = hub
         self.configuration = common.get_config_file_section('config.ini', 'configuration')
@@ -35,17 +34,20 @@ class Driver(object):
         func = getattr(self, "_"+browser.replace("-", "_"))
         return func(options)
 
-    def _sauce_options(self):
-        sauce_options = {'username': self.configuration.get('username'),
-                         'accessKey': self.configuration.get('access_key'),
-                         'build': self.configuration.get('build')if self.instance_counter == 1 else self.configuration.get('build2'),
-                         'name': self.configuration.get('test_name')}
-        return sauce_options
+    def _bs_options(self):
+        bstack_options = {
+            "os": self.configuration.get('platform'),
+            "osVersion": self.configuration.get('platform_version'),
+            "buildName": self.configuration.get('build'),
+            "sessionName": self.configuration.get('test_name'),
+            "userName": self.configuration.get('username'),
+            "accessKey": self.configuration.get('access_key')
+        }
+        return bstack_options
 
     def _remote(self, options):
         options.browser_version = self.configuration.get('browser_version')
-        options.platform_name = self.configuration.get('platform')
-        options.set_capability('sauce:options', self._sauce_options())
+        options.set_capability('bstack:options', self._bs_options())
         return webdriver.Remote(command_executor=self.hub, options=options)
 
     def _chrome_remote(self, options):
