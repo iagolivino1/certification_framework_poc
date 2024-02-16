@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 
 
 class ChatTemplatePage(object):
-    def __init__(self, driver):
+    def __init__(self, driver=None):
         self.driver = driver
         self.url = "https://app.nld1.eu.five9.com/five9_clients/consoles_latest/ChatConsole/ChatDemo.html?tenant=QA%20test%20NLD&profiles=inb_br"
         self.open_chat_button = "//div[@id='five9-maximize-button']"

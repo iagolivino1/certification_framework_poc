@@ -1,3 +1,4 @@
+import sys
 import common
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -12,11 +13,24 @@ from selenium.webdriver.edge.service import Service as EdgeService
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 
+def new_driver(hub_url):
+    return Driver(hub_url).driver
+
+
+def __set_config_file():
+    configuration = common.get_config_file_section('config.ini', 'configuration')
+    return f'configuration/{configuration.get("platform_tool")}.ini'
+
+
+DRIVERS = []
+CONFIG_FILE = __set_config_file()
+
+
 class Driver(object):
     def __init__(self, hub, instance_counter=1):
         self.instance_counter = instance_counter
         self.hub = hub
-        self.configuration = common.get_config_file_section('config.ini', 'configuration')
+        self.configuration = common.get_config_file_section(CONFIG_FILE, 'configuration')
         self.driver = self._browser_options(self.configuration.get('browser'))
 
     def _browser_options(self, browser=None):
@@ -45,9 +59,20 @@ class Driver(object):
         }
         return bstack_options
 
+    def _sauce_options(self):
+        sauce_options = {'username': self.configuration.get('username'),
+                         'accessKey': self.configuration.get('access_key'),
+                         'build': self.configuration.get('build'),
+                         'name': self.configuration.get('test_name')}
+        return sauce_options
+
     def _remote(self, options):
+        tool_options = 'bstack:options', self._bs_options()
         options.browser_version = self.configuration.get('browser_version')
-        options.set_capability('bstack:options', self._bs_options())
+        if 'saucelabs' in CONFIG_FILE:
+            options.platform_name = self.configuration.get('platform')
+            tool_options = 'sauce:options', self._sauce_options()
+        options.set_capability(tool_options[0], tool_options[1])
         return webdriver.Remote(command_executor=self.hub, options=options)
 
     def _chrome_remote(self, options):

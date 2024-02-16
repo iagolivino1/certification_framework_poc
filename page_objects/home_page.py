@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 
 
 class HomePage(object):
-    def __init__(self, driver):
+    def __init__(self, driver=None):
         self.driver = driver
         self.logout_element = "//a[@id='page_logout']"
         self.agent_span = "//span[@id='app_agent_span']"

@@ -8,26 +8,16 @@ from pytest_bdd import (
     when
 )
 
-LOGIN_PAGE = None
-AGENT_HOME = None
-HOME_PAGE = None
-CREDENTIALS = None
+from step_definitions import home_page_steps, agent_steps
 
-
-def set_pages(driver):
-    # set all pages that will be used in the test
-    global AGENT_HOME, HOME_PAGE, LOGIN_PAGE, CREDENTIALS
-    AGENT_HOME = AgentHomePage(driver)
-    HOME_PAGE = HomePage(driver)
-    LOGIN_PAGE = LoginPage(driver)
-    CREDENTIALS = common.get_config_file_section("config.ini", 'credentials')
+LOGIN_PAGE = LoginPage()
+CREDENTIALS = {}
 
 
 @given("I am in login page")
-def see_login_page(driver):
-    set_pages(driver)
+def see_login_page():
     LOGIN_PAGE.open_page()
-    common.wait_page_element_load(driver, LOGIN_PAGE.login_button)
+    common.wait_page_element_load(LOGIN_PAGE.driver, LOGIN_PAGE.login_button)
 
 
 @when("I perform login")
@@ -38,18 +28,18 @@ def perform_login():
 
 
 @then("I perform logout")
-def perform_logout(driver):
-    driver.switch_to.window(driver.current_window_handle)
-    AGENT_HOME.get_agent_profile_button().click()
-    AGENT_HOME.get_agent_logout_element().click()
-    common.wait_page_element_load(driver, AGENT_HOME.logout_reason_dialog)
-    AGENT_HOME.get_confirm_logout_button().click()
-    common.wait_page_to_be(driver, 'https://app.eu.five9.com/index.html?loginError=true')
-    common.switch_tabs(driver)
-    HOME_PAGE.get_logout_element().click()
-    common.wait_page_to_be(driver, LOGIN_PAGE.url)
+def perform_logout():
+    agent_steps.AGENT_HOME.driver.switch_to.window(agent_steps.AGENT_HOME.driver.current_window_handle)
+    agent_steps.AGENT_HOME.get_agent_profile_button().click()
+    agent_steps.AGENT_HOME.get_agent_logout_element().click()
+    common.wait_page_element_load(agent_steps.AGENT_HOME.driver, agent_steps.AGENT_HOME.logout_reason_dialog)
+    agent_steps.AGENT_HOME.get_confirm_logout_button().click()
+    common.wait_page_to_be(agent_steps.AGENT_HOME.driver, 'https://app.eu.five9.com/index.html?loginError=true')
+    common.switch_tabs(agent_steps.AGENT_HOME.driver)
+    home_page_steps.HOME_PAGE.get_logout_element().click()
+    common.wait_page_to_be(LOGIN_PAGE.driver, LOGIN_PAGE.url)
 
 
 @when("I see the home page")
-def see_home_page(driver):
-    common.wait_element_to_be_clickable(driver, HOME_PAGE.agent_span)
+def see_home_page():
+    common.wait_element_to_be_clickable(home_page_steps.HOME_PAGE.driver, home_page_steps.HOME_PAGE.agent_span)

@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 
 
 class AgentHomePage(object):
-    def __init__(self, driver):
+    def __init__(self, driver=None):
         self.driver = driver
         self.agent_status_button = "//button[@id='ReadyCodesLayout-ready-button']"
         self.ready_for_current_option = "//a[@id='ReadyCodesLayout-readycurrent-label']"
