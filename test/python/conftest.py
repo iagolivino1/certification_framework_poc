@@ -1,6 +1,8 @@
+import importlib
 import pytest
-from driver import Driver
-import common
+
+import driver
+from step_definitions import common_steps
 
 pytest_plugins = [
    "step_definitions.agent_steps",
@@ -12,23 +14,14 @@ pytest_plugins = [
 ]
 
 
-# create driver as fixture to be used in the test scripts
-@pytest.fixture
-def driver():
-    hub_url = common.get_config_file_section('config.ini', 'configuration').get('hub_url')
-    driver = Driver(hub=hub_url).driver
-    yield driver
-    driver.quit()
-
-
-@pytest.fixture
-def driver2():
-    # getting error:
-    # response = {'status': 500, 'value': '{"status": 13, "sessionId": "9b8e6a41060f46768947ebdbdf2fbaed", "value": {"message": "Job no...nization has reached its concurrent session limit.\\nContact your administrator or sales@saucelabs.com to upgrade."}}'}
-    hub_url = common.get_config_file_section('config.ini', 'configuration').get('hub_url')
-    driver = Driver(hub=hub_url, instance_counter=2).driver
-    yield driver
-    driver.quit()
+def pytest_bdd_before_scenario(request, feature, scenario):
+    print('setting up browser instances and pages...')
+    scenario_location_split = scenario.feature.filename.split("/")
+    scenario_file_name = scenario_location_split[len(scenario_location_split)-1]
+    setup_module = importlib.import_module(f"test.initialization.{scenario_file_name.replace('.feature', '')}")
+    setup_function = scenario.name.lower().replace(" ", "_")
+    getattr(setup_module, setup_function)()
+    print('browser instances and pages set!')
 
 
 @pytest.fixture
@@ -39,3 +32,16 @@ def start_message():
 @pytest.fixture
 def reply_message():
     return "Automatic Reply"
+
+
+def pytest_bdd_after_scenario(request, feature, scenario):
+    print('reset variables...')
+    common_steps.reset_variables()
+    print('variables reset!')
+    print('closing all existent browser instances...')
+    open_browsers = len(driver.DRIVERS)
+    for d in range(open_browsers):
+        d_ = driver.DRIVERS[d-1]
+        driver.DRIVERS.remove(d_)
+        d_.quit()
+    print('browser instances closed!')

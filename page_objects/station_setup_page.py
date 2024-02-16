@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 
 
 class StationSetupPage(object):
-    def __init__(self, driver):
+    def __init__(self, driver=None):
         self.driver = driver
         self.setup_modal = "//div[@id='agent-prep-wizard']//div[contains(@class, 'f9-modal-dialog')]"
         self.none_station = "//label[@id='EMPTY']"
