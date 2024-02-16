@@ -1,9 +1,7 @@
 import common
 from page_objects.chat_template_page import ChatTemplatePage
-from pytest_bdd import (
-    given,
-    when
-)
+from pytest_bdd import when
+
 
 CHAT_TEMPLATE = ChatTemplatePage()
 

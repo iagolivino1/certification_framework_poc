@@ -1,7 +1,6 @@
 from page_objects.home_page import HomePage
-from pytest_bdd import (
-    when
-)
+from pytest_bdd import when
+
 
 HOME_PAGE = HomePage()
 

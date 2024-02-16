@@ -1,9 +1,7 @@
 import common
 from page_objects.station_setup_page import StationSetupPage
-from pytest_bdd import (
-    given,
-    when
-)
+from pytest_bdd import when
+
 
 STATION_SETUP = StationSetupPage()
 

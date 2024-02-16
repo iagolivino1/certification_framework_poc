@@ -1,4 +1,3 @@
-import sys
 from configparser import NoSectionError
 import driver
 from common import *

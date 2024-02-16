@@ -1,9 +1,7 @@
 import common
 from page_objects.agent_home_page import AgentHomePage
-from pytest_bdd import (
-    given,
-    when
-)
+from pytest_bdd import when
+
 
 AGENT_HOME = AgentHomePage()
 

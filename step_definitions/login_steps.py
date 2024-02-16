@@ -1,14 +1,8 @@
 import common
-from page_objects.agent_home_page import AgentHomePage
-from page_objects.home_page import HomePage
 from page_objects.login_page import LoginPage
-from pytest_bdd import (
-    given,
-    then,
-    when
-)
-
+from pytest_bdd import given, then, when
 from step_definitions import home_page_steps, agent_steps
+
 
 LOGIN_PAGE = LoginPage()
 CREDENTIALS = {}

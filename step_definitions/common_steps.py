@@ -1,9 +1,7 @@
 import common
 from page_objects.common_page import CommonPage
-from pytest_bdd import (
-    given,
-    when
-)
+from pytest_bdd import when
+
 
 COMMON_PAGE = CommonPage()
 
