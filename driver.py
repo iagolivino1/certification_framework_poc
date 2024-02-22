@@ -1,4 +1,5 @@
 import common
+from configparser import NoSectionError
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.safari.options import Options as SafariOptions
@@ -29,6 +30,7 @@ class Driver(object):
     def __init__(self, hub, instance_counter=1):
         self.instance_counter = instance_counter
         self.hub = hub
+        self.general_flags = common.get_config_file_section('config.ini', 'flags')
         self.configuration = common.get_config_file_section(CONFIG_FILE, 'configuration')
         self.driver = self._browser_options(self.configuration.get('browser'))
 
@@ -41,8 +43,17 @@ class Driver(object):
             options = EdgeOptions()
         else:
             options = ChromeOptions()
-        options.add_argument('--disable-popup-blocking')
-        options.add_argument('--disable-notifications')
+
+        for general_flag in self.general_flags.values():
+            options.add_argument(general_flag)
+
+        try:
+            browser_flags = common.get_config_file_section(CONFIG_FILE, f'{browser.split("-")[0]}_flags')
+        except NoSectionError:
+            browser_flags = {}
+
+        for browser_flag in browser_flags.values():
+            options.add_argument(browser_flag)
 
         func = getattr(self, "_"+browser.replace("-", "_"))
         return func(options)
