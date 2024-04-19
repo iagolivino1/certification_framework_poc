@@ -6,10 +6,15 @@ from step_definitions import login_steps, agent_steps, home_page_steps, common_s
 
 def set_base_pages(instances=1):
     try:
-        login_steps.CREDENTIALS = get_config_file_section(f'{driver.CONFIG_FILE}', 'credentials')
+        login_steps.AGENT_CREDENTIALS = get_config_file_section(f'{driver.CONFIG_FILE}', 'credentials')
     except NoSectionError as e:
         print(f'could not find "credentials" section in {driver.CONFIG_FILE}.\n{e}\nusing the default...')
-        login_steps.CREDENTIALS = get_config_file_section('config.ini', 'credentials')
+        login_steps.AGENT_CREDENTIALS = get_config_file_section('config.yml', 'credentials')
+
+    # set login url if any
+    login_url = get_config_file_section(f'{driver.CONFIG_FILE}', 'configuration').get('login_url')
+    if login_url:
+        login_steps.LOGIN_PAGE.url = login_url
 
     # start number of browser instances will be needed
     hub_url = get_config_file_section(f'{driver.CONFIG_FILE}', 'configuration').get('hub_url')

@@ -1,6 +1,8 @@
 import configparser
 import os
 from time import sleep
+
+import yaml
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -8,13 +10,12 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 def read_configuration_file(file_name):
-    config = configparser.RawConfigParser()
-    config.read(os.path.dirname(os.path.realpath(__file__)) + os.sep + file_name.replace("../", ""))
-    return config
+    file_ = open(os.path.dirname(os.path.realpath(__file__)) + os.sep + file_name.replace("../", ""), 'r')
+    return yaml.safe_load(file_)
 
 
 def get_config_file_section(file_name, section):
-    return dict(read_configuration_file(file_name).items(section))
+    return read_configuration_file(file_name)[section]
 
 
 def wait_page_element_load(driver, element_xpath, timeout_in_seconds=30):

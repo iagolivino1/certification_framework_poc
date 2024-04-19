@@ -1,0 +1,13 @@
+configuration:
+    hub_url: https://hub.browserstack.com/wd/hub
+    platform: Windows
+    platform_version: 11
+    browser: <browser>-<local_or_remote>
+    browser_version: <version>
+    username: <bs_username>
+    access_key: <bs_access_key>
+    build: <bs_build>
+    test_name: <any_name>
+
+chrome_flags:
+    third_party_cookie_phaseout: --test-third-party-cookie-phaseout

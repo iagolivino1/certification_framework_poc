@@ -18,8 +18,8 @@ def new_driver(hub_url):
 
 
 def __set_config_file():
-    configuration = common.get_config_file_section('config.ini', 'configuration')
-    return f'configuration/{configuration.get("platform_tool")}.ini'
+    configuration = common.get_config_file_section('config.yml', 'configuration')
+    return f'configuration/{configuration.get("platform_tool")}.yml'
 
 
 DRIVERS = []
@@ -30,7 +30,7 @@ class Driver(object):
     def __init__(self, hub, instance_counter=1):
         self.instance_counter = instance_counter
         self.hub = hub
-        self.general_flags = common.get_config_file_section('config.ini', 'flags')
+        self.general_flags = common.get_config_file_section('config.yml', 'flags')
         self.configuration = common.get_config_file_section(CONFIG_FILE, 'configuration')
         self.driver = self._browser_options(self.configuration.get('browser'))
 
