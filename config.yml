@@ -1,0 +1,11 @@
+configuration:
+  platform_tool: local
+
+credentials:
+  agent_0:
+    user: <five9user>
+    pass: <pass>
+
+flags:
+  disable_popup_blocking: --disable-popup-blocking
+  disable_notifications: --disable-notifications

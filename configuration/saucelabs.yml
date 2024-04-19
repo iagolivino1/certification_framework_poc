@@ -1,0 +1,9 @@
+configuration:
+    hub_url: https://ondemand.eu-central-1.saucelabs.com:443/wd/hub
+    platform: Windows 11
+    browser: <browser>-<local_or_remote>
+    browser_version: latest
+    username: <sl_username>
+    access_key: <sl_access_key>
+    build: <sl_build>
+    test_name: <any_name>
