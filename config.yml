@@ -1,5 +1,6 @@
 configuration:
   platform_tool: local
+  lab: qa01
 
 credentials:
   agent_0:

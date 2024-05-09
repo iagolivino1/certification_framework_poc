@@ -1,3 +1,5 @@
+import os
+
 import common
 from configparser import NoSectionError
 from selenium import webdriver
@@ -52,8 +54,16 @@ class Driver(object):
         except NoSectionError:
             browser_flags = {}
 
+        try:
+            browser_extensions = common.get_config_file_section(CONFIG_FILE, f'{browser.split("-")[0]}_extensions')
+        except NoSectionError:
+            browser_extensions = {}
+
         for browser_flag in browser_flags.values():
             options.add_argument(browser_flag)
+
+        for browser_extension in browser_extensions.values():
+            options.add_extension(os.path.dirname(os.path.realpath(__file__)) + os.sep + f'extensions/{browser_extension}')
 
         func = getattr(self, "_"+browser.replace("-", "_"))
         return func(options)

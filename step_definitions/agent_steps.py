@@ -1,7 +1,8 @@
 import common
 from page_objects.agent_home_page import AgentHomePage
-from pytest_bdd import when
+from pytest_bdd import when, parsers
 
+from step_definitions import call_interaction_steps
 
 AGENT_HOME = AgentHomePage()
 

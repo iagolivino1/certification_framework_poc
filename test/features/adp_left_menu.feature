@@ -11,7 +11,11 @@ Feature: ADP left menu
     When I see the home page
     When I select adp from menu
     When I check the second browser tab opened
-    When I configure station with none option
+    When I select Softphone for station type
+    When I configure station with 870000000001201 id
+    When I proceed to next step
+    When I unselect all skills
+    When I proceed to next step
     When I see the agent home page
     When I check the left menu elements visibility
     Then I perform logout

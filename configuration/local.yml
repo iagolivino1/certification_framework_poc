@@ -1,5 +1,4 @@
 configuration:
-    login_url: https://qalogin01.five9lab.com/
     hub_url: https://hub.browserstack.com/wd/hub
     platform: Windows
     platform_version: 11
@@ -12,8 +11,7 @@ configuration:
 
 chrome_flags:
     third_party_cookie_phaseout: --test-third-party-cookie-phaseout
+    use-fake-ui-for-media-stream: --use-fake-ui-for-media-stream
 
-credentials:
-    agent_0:
-        user: user0
-        pass: pass0
+chrome_extensions:
+    softphone: 'softphone.crx'

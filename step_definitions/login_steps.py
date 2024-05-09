@@ -8,6 +8,7 @@ AGENT_CREDENTIALS = {}
 
 
 @given("I am in login page")
+@when("I am in login page")
 def see_login_page():
     LOGIN_PAGE.open_page()
     common.wait_page_element_load(LOGIN_PAGE.driver, LOGIN_PAGE.login_button)

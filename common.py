@@ -1,8 +1,6 @@
-import configparser
 import os
-from time import sleep
-
 import yaml
+from time import sleep
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -64,8 +62,12 @@ def assert_condition(condition, message):
 
 
 def wait_element_class_contains(driver, element_xpath, text, timeout_in_seconds=30):
+    return wait_element_attribute_contains(driver, element_xpath, "class", text, timeout_in_seconds)
+
+
+def wait_element_attribute_contains(driver, element_xpath, attribute, text, timeout_in_seconds=30):
     WebDriverWait(driver, timeout_in_seconds).until(
-        EC.text_to_be_present_in_element_attribute((By.XPATH, element_xpath), "class", text))
+        EC.text_to_be_present_in_element_attribute((By.XPATH, element_xpath), attribute, text))
 
 
 def _wait_elements_number_to_be(driver, element_xpath, element_number, more_than=True, timeout_in_seconds=60):
@@ -89,6 +91,11 @@ def wait_element_to_be_more_than(driver, element_xpath, element_number, timeout_
 
 def wait_elements_to_be_less_than(driver, element_xpath, element_number, timeout_in_seconds=60):
     return _wait_elements_number_to_be(driver, element_xpath, element_number, more_than=False, timeout_in_seconds=timeout_in_seconds)
+
+
+def wait_element_to_not_be_displayed(driver, element_xpath, timeout_in_seconds=60):
+    WebDriverWait(driver, timeout_in_seconds).until(
+        EC.invisibility_of_element((By.XPATH, element_xpath)))
 
 
 def move_to_and_click_element(driver, element_xpath):
