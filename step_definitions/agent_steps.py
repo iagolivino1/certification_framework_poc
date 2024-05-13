@@ -58,3 +58,9 @@ def dispose_chat():
     common.wait_page_element_load(AGENT_HOME.driver, AGENT_HOME.no_disposition_option)
     AGENT_HOME.get_no_disposition_option().click()
     common.wait_elements_to_be_less_than(AGENT_HOME.driver, AGENT_HOME.newest_chat_interaction, 1)
+
+
+@when("I open agent call option")
+def open_call_option():
+    AGENT_HOME.get_agent_voice_button().click()
+    common.wait_element_to_be_clickable(AGENT_HOME.driver, call_interaction_steps.CALL_INTERACTIONS.number_input)

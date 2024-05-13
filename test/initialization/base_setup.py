@@ -21,11 +21,11 @@ def set_base_pages(instances=1):
     for i in range(instances):
         driver.DRIVERS.append(driver.new_driver(hub_url=hub_url))
 
-    login_steps.LOGIN_PAGE.driver = driver.DRIVERS[0]
-    agent_steps.AGENT_HOME.driver = driver.DRIVERS[0]
-    home_page_steps.HOME_PAGE.driver = driver.DRIVERS[0]
-    common_steps.COMMON_PAGE.driver = driver.DRIVERS[0]
-    station_setup_steps.STATION_SETUP.driver = driver.DRIVERS[0]
+    # login_steps.LOGIN_PAGE.driver = driver.DRIVERS[0]
+    # agent_steps.AGENT_HOME.driver = driver.DRIVERS[0]
+    # home_page_steps.HOME_PAGE.driver = driver.DRIVERS[0]
+    # common_steps.COMMON_PAGE.driver = driver.DRIVERS[0]
+    # station_setup_steps.STATION_SETUP.driver = driver.DRIVERS[0]
 
     # save started pages
     common_steps.STARTED_PAGES.append(login_steps.LOGIN_PAGE)

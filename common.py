@@ -70,6 +70,10 @@ def wait_element_attribute_contains(driver, element_xpath, attribute, text, time
         EC.text_to_be_present_in_element_attribute((By.XPATH, element_xpath), attribute, text))
 
 
+def wait_element_attribute_to_be_not_available(driver, element_xpath, attribute, timeout_in_seconds=30):
+    WebDriverWait(driver, timeout_in_seconds).until_not(EC.element_attribute_to_include((By.XPATH, element_xpath), attribute))
+
+
 def _wait_elements_number_to_be(driver, element_xpath, element_number, more_than=True, timeout_in_seconds=60):
     start_time = 0
     while start_time < timeout_in_seconds:
