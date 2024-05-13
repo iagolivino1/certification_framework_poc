@@ -27,7 +27,8 @@ class CallInteractionPage(object):
         self.worksheet_expand_button = "//button[@class='worksheet-expand']"
         self.worksheet_cancel_expand = "//a[@href='#'][text()='Cancel']"
         self.worksheet_move_to_panel = "//a[@href='#'][text()='Move to Panel']"
-        self.worksheet_questions = "//div[@class='questionList']"
+        self.worksheet_questions = "//div[@class='questionList']/div"
+        self.worksheet_current_question = "//div[@class='worksheetQuestionNumber']"
         self.worksheet_next_question_button = "//button[contains(@class, 'ws_next_btn')]"
         self.worksheet_previous_question_button = "//button[contains(@class, 'ws_prev_btn')]"
         self.worksheet_finish_question_button = "//button[contains(@class, 'ws_finish_btnbtn')]"
@@ -101,6 +102,9 @@ class CallInteractionPage(object):
 
     def get_worksheet_questions(self):
         return self.driver.find_elements(By.XPATH, self.worksheet_questions)
+
+    def get_worksheet_current_question(self):
+        return self.driver.find_element(By.XPATH, self.worksheet_current_question)
 
     def get_worksheet_next_question_button(self):
         return self.driver.find_element(By.XPATH, self.worksheet_next_question_button)
