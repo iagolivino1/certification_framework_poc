@@ -1,4 +1,3 @@
-# all the elements of Home Page should be here
 from selenium.webdriver.common.by import By
 
 

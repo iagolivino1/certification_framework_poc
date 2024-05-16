@@ -9,8 +9,11 @@ Feature: Chat interaction
     When I perform login
     When I see the home page
     When I select adp from menu
-    When I check the second browser tab opened
-    When I configure station with none option
+    When I check the new browser tab opened
+    When I select None for station type
+    When I proceed to next step
+    When I select all skills
+    When I proceed to next step
     When I see the agent home page
     When I change agent state to ready for text
     When I go to chat template page

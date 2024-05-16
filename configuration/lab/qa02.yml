@@ -1,0 +1,12 @@
+configuration:
+  login_url: https://qalogin11.five9lab.com/
+  chat_console_url: https://qaapp11.five9lab.com/five9_clients/consoles_latest/ChatConsole/ChatDemo.html?tenant=qaenv02_migr&profiles=iago_inbound
+  email_console_url: https://qaapp11.five9lab.com/consoles/EmailConsole/EmailDemo.html?tenant=qaenv02_migr&profiles=iago_inbound
+
+credentials:
+  agent_0:
+    user: <user1>
+    pass: <pass1>
+  agent_1:
+    user: <user2>
+    pass: <pass2>

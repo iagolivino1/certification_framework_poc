@@ -1,8 +1,9 @@
 import importlib
 import pytest
-
 import driver
+import common
 from step_definitions import common_steps
+
 
 pytest_plugins = [
    "step_definitions.agent_steps",
@@ -10,7 +11,8 @@ pytest_plugins = [
    "step_definitions.common_steps",
    "step_definitions.home_page_steps",
    "step_definitions.login_steps",
-   "step_definitions.station_setup_steps"
+   "step_definitions.station_setup_steps",
+   "step_definitions.call_interaction_steps"
 ]
 
 
@@ -41,7 +43,20 @@ def pytest_bdd_after_scenario(request, feature, scenario):
     print('closing all existent browser instances...')
     open_browsers = len(driver.DRIVERS)
     for d in range(open_browsers):
-        d_ = driver.DRIVERS[d-1]
-        driver.DRIVERS.remove(d_)
+        d_ = driver.DRIVERS.get(str(d)).get('instance')
+        driver.DRIVERS.pop(str(d))
         d_.quit()
     print('browser instances closed!')
+
+
+def pytest_bdd_before_step_call(request, feature, scenario, step, step_func, step_func_args):
+    print(f"starting step: {step}")
+
+
+def pytest_bdd_after_step(request, feature, scenario, step, step_func, step_func_args):
+    # update browser tab title
+    # common_page will always be started
+    # driver.DRIVERS.index(common_steps.COMMON_PAGE.driver)
+    tab_info = {'title': common_steps.COMMON_PAGE.driver.title, 'browser_number': int(common.get_driver_by_instance(common_steps.COMMON_PAGE.driver))}
+    common.BROWSER_TABS[common_steps.COMMON_PAGE.driver.current_window_handle] = tab_info
+    print(f"step finished: {step}")
