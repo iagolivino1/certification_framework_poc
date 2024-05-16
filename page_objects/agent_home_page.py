@@ -1,4 +1,3 @@
-# all the elements of Agent Page should be here
 from selenium.webdriver.common.by import By
 
 
@@ -36,8 +35,11 @@ class AgentHomePage(object):
         self.conversation_content = "//div[@class='container-conversation']"
         self.reply_message_textarea = "//div[contains(@class, 'container-reply-message')]//textarea"
         self.send_message_button = "//button[@id='ChatDetailsActions-send-button']"
-        self.set_disposition_button = "//button[@id='ReactSearchableDropdown-searchabledropdown-button']"
+        self.set_disposition_button = "//span[contains(text(), 'SET DISPOSITION')]/.."
         self.no_disposition_option = "//a[text()='No Disposition']"
+        self.do_not_call_disposition_option = "//a[text()='Do Not Call']"
+        self.do_not_call_disposition_option = "//a[text()='Do Not Call']"
+        self.all_dispositions = "//ul[contains(@class, 'voice-dispositions')]/li/a"
 
     def get_agent_status_button(self):
         return self.driver.find_element(By.XPATH, self.agent_status_button)
@@ -146,3 +148,9 @@ class AgentHomePage(object):
 
     def get_no_disposition_option(self):
         return self.driver.find_element(By.XPATH, self.no_disposition_option)
+
+    def get_do_not_call_disposition_option(self):
+        return self.driver.find_element(By.XPATH, self.do_not_call_disposition_option)
+
+    def get_all_dispositions(self):
+        return self.driver.find_elements(By.XPATH, self.all_dispositions)

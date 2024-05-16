@@ -1,4 +1,3 @@
-# all the elements of Login Page should be here
 from selenium.webdriver.common.by import By
 
 

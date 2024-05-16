@@ -1,4 +1,3 @@
-# all the elements of Station Setup Page (it is a modal) should be here
 from selenium.webdriver.common.by import By
 
 

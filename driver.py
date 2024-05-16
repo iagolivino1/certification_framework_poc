@@ -1,5 +1,4 @@
 import os
-
 import common
 from configparser import NoSectionError
 from selenium import webdriver
@@ -24,7 +23,7 @@ def __set_config_file():
     return f'configuration/{configuration.get("platform_tool")}.yml'
 
 
-DRIVERS = []
+DRIVERS = {}
 CONFIG_FILE = __set_config_file()
 
 

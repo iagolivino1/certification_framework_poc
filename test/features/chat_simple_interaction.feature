@@ -9,7 +9,7 @@ Feature: Chat interaction
     When I perform login
     When I see the home page
     When I select adp from menu
-    When I check the second browser tab opened
+    When I check the new browser tab opened
     When I select None for station type
     When I proceed to next step
     When I select all skills

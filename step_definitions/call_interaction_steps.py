@@ -1,20 +1,19 @@
-import random
-
-from selenium.webdriver import Keys
-
 import common
+import driver
 from pytest_bdd import parsers, when
+from selenium.webdriver import Keys
 from selenium.common import TimeoutException, NoSuchElementException
 from page_objects.call_interaction_page import CallInteractionPage
-from step_definitions import agent_steps
+from step_definitions import agent_steps, common_steps
 
 CALL_INTERACTIONS = CallInteractionPage()
 WORKSHEET_QUESTIONS = {}
 
 
-def handle_dnc_dialog(action='accept', timeout=10, force=False):
+def handle_dnc_dialog(action='accept', timeout=5, force=False):
     try:
-        common.wait_element_to_be_more_than(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.dnc_dialog, 0)
+        common.wait_element_to_be_more_than(driver=CALL_INTERACTIONS.driver, element_xpath=CALL_INTERACTIONS.dnc_dialog,
+                                            element_number=0, timeout_in_seconds=3)
         for sec in range(timeout):
             if CALL_INTERACTIONS.get_dnc_dialog().is_displayed():
                 if action == 'accept':
@@ -36,6 +35,7 @@ def check_script_call_tab():
     CALL_INTERACTIONS.get_script_tab().click()
     common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.script_content)
     call_contact_number = CALL_INTERACTIONS.get_call_contact_header().text
+    common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.script_content)
     common.switch_to_frame(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.get_script_content())
     assert "Inbound Call Arriving!" in CALL_INTERACTIONS.get_script_title().text, "SCRIPT TITLE IS NOT BEING DISPLAYED/LOADED"
     caller_data_available = False
@@ -44,7 +44,19 @@ def check_script_call_tab():
             caller_data_available = True
             break
     assert caller_data_available, "CALLER DATA IS NOT BEING DISPLAYED/LOADED IN SCRIPT"
-    common.switch_tabs(driver=CALL_INTERACTIONS.driver, tab=CALL_INTERACTIONS.driver.current_window_handle)
+    common.switch_tabs(driver=CALL_INTERACTIONS.driver, tab_id=CALL_INTERACTIONS.driver.current_window_handle)
+
+
+def check_connector_call_tab():
+    # last browser tab should be the connector tab
+    common.system_wait(3)
+    common_steps.check_new_tab()
+    assert driver.DRIVERS.get(common.get_driver_by_instance(CALL_INTERACTIONS.driver)).get('number_of_tabs') == \
+           len(CALL_INTERACTIONS.driver.window_handles), "NEW TAB FOR CONNECTOR DID NOT OPEN!"
+    common.wait_page_to_be_loaded(CALL_INTERACTIONS.driver)
+    assert CALL_INTERACTIONS.driver.current_url == CALL_INTERACTIONS.connector_url, \
+        f"CONNECTOR URL IS WRONG! BROWSER_URL: {CALL_INTERACTIONS.driver.current_url} | EXPECTED_URL: {CALL_INTERACTIONS.connector_url}"
+    # log success
 
 
 def fill_worksheet_call_tab():
@@ -90,12 +102,10 @@ def call_number(number):
     CALL_INTERACTIONS.get_number_input().send_keys(Keys.ESCAPE)
     CALL_INTERACTIONS.get_dial_button().click()
     handle_dnc_dialog()
-    try:
-        common.wait_element_to_be_clickable(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.call_notification_dialog)
-        CALL_INTERACTIONS.get_call_notification_dialog_ok_button().click()
-    except TimeoutException:
-        print("Call notification dialog did not appear or was closed before the validation!")
-    common.wait_elements_to_be_less_than(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.call_notification_dialog, 1)
+    common_steps.wait_modal_dialog_open('manual', 15)
+    common_steps.select_modal_next_button()
+    common_steps.wait_modal_dialog_close('manual', 15)
+    # log success
 
 
 @when("I get the answer for the call")
@@ -125,3 +135,15 @@ def crosscheck_worksheet_answers():
         if has_next_question:
             CALL_INTERACTIONS.get_worksheet_next_question_button().click()
     # log result
+
+
+@when("I receive an inbound call")
+def receive_inbound_call():
+    common_steps.wait_modal_dialog_open('inbound', 60)
+    common_steps.select_modal_next_button()
+    common_steps.wait_modal_dialog_close('inbound', 60)  # auto-answer must be enabled
+    common.wait_element_attribute_contains(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.hold_call_button, 'data-id', 'toggleHold')
+    assert 'Live Call' in CALL_INTERACTIONS.get_call_voice_details_header().text, "LIVE CALL WAS NOT STARTED"
+
+
+

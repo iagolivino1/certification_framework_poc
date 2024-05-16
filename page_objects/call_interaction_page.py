@@ -4,14 +4,17 @@ from selenium.webdriver.common.by import By
 class CallInteractionPage(object):
     def __init__(self, driver=None):
         self.driver = driver
+        self.connector_url = None
         self.number_input = "//input[@id='MakeCallFilter-filter-input']"
         self.dial_button = "//button[@id='NewCallOptions-action-button']"
         self.dnc_dialog = "//div[@id='okay-cancel-dialog']"
         self.ok_dialog_button = "//button[@id='OkCancelDialog-ok-button']"
         self.cancel_dialog_button = "//button[@id='OkCancelDialog-cancel-button']"
+        self.call_voice_details_header = "//span[@id='AgentVoiceDetailsHeader-infostatetype-label']"
         self.call_contact_header = "//span[@id='AgentVoiceDetailsHeader-contact-node']"
         self.call_notification_dialog = "//div[@id='call-notification-dialog']"
         self.call_notification_dialog_ok_button = "//button[@id='CallNotificationDialog-ok-button']"
+        self.hold_call_button = "//button[@id='CallControlsItem-toggleHold-button']"
         self.outbound_campaigns_button = "//button[@id='NewCallOptions-campaign-button']"
         self.outbound_campaigns_options = "//ul[contains(@class, 'campaign-dropdown')]/li"
         self.caller_contact = "//span[@class='info-contact']"
@@ -49,6 +52,9 @@ class CallInteractionPage(object):
     def get_cancel_dialog_button(self):
         return self.driver.find_element(By.XPATH, self.cancel_dialog_button)
 
+    def get_call_voice_details_header(self):
+        return self.driver.find_element(By.XPATH, self.call_voice_details_header)
+
     def get_call_contact_header(self):
         return self.driver.find_element(By.XPATH, self.call_contact_header)
 
@@ -57,6 +63,9 @@ class CallInteractionPage(object):
 
     def get_call_notification_dialog_ok_button(self):
         return self.driver.find_element(By.XPATH, self.call_notification_dialog_ok_button)
+
+    def get_hold_call_button(self):
+        return self.driver.find_element(By.XPATH, self.hold_call_button)
 
     def get_outbound_campaigns_button(self):
         return self.driver.find_element(By.XPATH, self.outbound_campaigns_button)

@@ -1,8 +1,7 @@
 import common
 from page_objects.agent_home_page import AgentHomePage
 from pytest_bdd import when, parsers
-
-from step_definitions import call_interaction_steps
+from step_definitions import call_interaction_steps, common_steps
 
 AGENT_HOME = AgentHomePage()
 
@@ -20,13 +19,31 @@ def check_agent_left_menu():
     common.assert_condition(AGENT_HOME.get_agent_voicemail_button().is_displayed(), "VOICEMAIL BUTTON IS NOT VISIBLE")
 
 
-@when("I change agent state to ready for text")
-def select_text_channel():
+@when(parsers.parse("I change agent state to ready for {options}"))
+def set_agent_ready_for(options):
+    common.switch_tabs(AGENT_HOME.driver, tab_title='Agent Desktop Plus')
+    options = options.split(',')
     AGENT_HOME.get_agent_status_button().click()
     AGENT_HOME.get_ready_for_option().click()
-    if "checked" not in AGENT_HOME.get_text_channel_checkbox_status().get_attribute("class"):
-        AGENT_HOME.get_text_channel_checkbox().click()
-        common.wait_element_class_contains(AGENT_HOME.driver, AGENT_HOME.text_channel_checkbox, "checked")
+    for option in options:
+        if option.lower() == 'text':
+            checkbox = AGENT_HOME.get_text_channel_checkbox()
+            checkbox_status = AGENT_HOME.get_text_channel_checkbox_status()
+            checkbox_path = AGENT_HOME.text_channel_checkbox
+        elif option.lower() == 'voice':
+            checkbox = AGENT_HOME.get_voice_channel_checkbox()
+            checkbox_status = AGENT_HOME.get_voice_channel_checkbox_status()
+            checkbox_path = AGENT_HOME.voice_channel_checkbox
+        elif option.lower() == 'vm':
+            checkbox = AGENT_HOME.get_voicemail_channel_checkbox()
+            checkbox_status = AGENT_HOME.get_voicemail_channel_checkbox_status()
+            checkbox_path = AGENT_HOME.voicemail_channel_checkbox
+        else:
+            raise NotImplementedError(f"NOT VALID OR NOT IMPLEMENTED OPTION: {option}")
+
+        if "checked" not in checkbox_status.get_attribute("class"):
+            checkbox.click()
+            common.wait_element_class_contains(AGENT_HOME.driver, checkbox_path, "checked")
     AGENT_HOME.get_confirm_channel_button().click()
     common.wait_element_class_contains(AGENT_HOME.driver, AGENT_HOME.agent_status_button, "state-ready")
 
@@ -64,3 +81,20 @@ def dispose_chat():
 def open_call_option():
     AGENT_HOME.get_agent_voice_button().click()
     common.wait_element_to_be_clickable(AGENT_HOME.driver, call_interaction_steps.CALL_INTERACTIONS.number_input)
+
+
+@when(parsers.parse("I set {disposition} disposition"))
+def set_disposition(disposition):
+    common.system_wait(5)
+    AGENT_HOME.get_set_disposition_button().click()
+    common.wait_element_attribute_contains(AGENT_HOME.driver, AGENT_HOME.set_disposition_button, 'aria-expanded', 'true')
+    if disposition == 'No Disposition':
+        AGENT_HOME.get_no_disposition_option().click()
+    elif disposition == 'Do Not Call':
+        AGENT_HOME.get_do_not_call_disposition_option().click()
+    else:
+        for disposition_ in AGENT_HOME.get_all_dispositions():
+            if disposition_.text == disposition:
+                disposition_.click()
+                break
+    common.wait_page_element_load(AGENT_HOME.driver, call_interaction_steps.CALL_INTERACTIONS.number_input)

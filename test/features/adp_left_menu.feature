@@ -10,7 +10,7 @@ Feature: ADP left menu
     When I perform login
     When I see the home page
     When I select adp from menu
-    When I check the second browser tab opened
+    When I check the new browser tab opened
     When I select Softphone for station type
     When I configure station with 870000000001201 id
     When I proceed to next step

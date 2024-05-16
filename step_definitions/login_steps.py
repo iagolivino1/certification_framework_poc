@@ -24,15 +24,26 @@ def perform_login():
 
 @then("I perform logout")
 def perform_logout():
-    agent_steps.AGENT_HOME.driver.switch_to.window(agent_steps.AGENT_HOME.driver.current_window_handle)
-    agent_steps.AGENT_HOME.get_agent_profile_button().click()
-    agent_steps.AGENT_HOME.get_agent_logout_element().click()
-    common.wait_page_element_load(agent_steps.AGENT_HOME.driver, agent_steps.AGENT_HOME.logout_reason_dialog)
-    agent_steps.AGENT_HOME.get_confirm_logout_button().click()
-    common.wait_page_to_be(agent_steps.AGENT_HOME.driver, 'index.html?loginError=true')
-    common.switch_tabs(agent_steps.AGENT_HOME.driver)
-    home_page_steps.HOME_PAGE.get_logout_element().click()
-    common.wait_page_to_be(LOGIN_PAGE.driver, LOGIN_PAGE.url)
+    # get logged agents
+    for agent_ in AGENT_CREDENTIALS:
+        agent_info = AGENT_CREDENTIALS.get(agent_)
+        if not agent_info.get('free') and agent_info.get('free') is not None:
+            common_steps.set_current_browser(common.get_driver_by_instance(agent_info.get('driver'), False).get('instance'))
+            common.switch_tabs(agent_steps.AGENT_HOME.driver, tab_title='Agent Desktop Plus')
+            agent_steps.AGENT_HOME.get_agent_profile_button().click()
+            agent_steps.AGENT_HOME.get_agent_logout_element().click()
+            common.wait_page_element_load(agent_steps.AGENT_HOME.driver, agent_steps.AGENT_HOME.logout_reason_dialog)
+            agent_steps.AGENT_HOME.get_confirm_logout_button().click()
+            common.wait_page_to_be(agent_steps.AGENT_HOME.driver, 'index.html?loginError=true')
+            if agent_info.get('login_type') == 'emulation':
+                common.switch_tabs(driver=agent_steps.AGENT_HOME.driver, tab_title='Five9. Inc. :: Applications')
+                home_page_steps.HOME_PAGE.get_logout_element().click()
+                common.wait_page_to_be(LOGIN_PAGE.driver, LOGIN_PAGE.url)
+            # release agent
+            agent_info['free'] = True
+            agent_info['driver'] = None
+            agent_info['login_type'] = None
+            AGENT_CREDENTIALS[agent_] = agent_info
 
 
 @when("I see the home page")
