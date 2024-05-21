@@ -48,7 +48,7 @@ def _wait_modal_dialog(modal_type, timeout_in_seconds=15, open_=True):
     if open_:
         if modal_type == 'station':
             timeout_in_seconds = 300
-        common.wait_page_element_load(driver=COMMON_PAGE.driver,
+        common.wait_page_element_load(driver_=COMMON_PAGE.driver,
                                       element_xpath=COMMON_PAGE.modal_dialog.replace('<title>',
                                                                                      MODAL_TYPES.get(modal_type)),
                                       timeout_in_seconds=timeout_in_seconds)
@@ -120,7 +120,7 @@ def select_modal_next_button():
 @when("I check the new browser tab opened")
 def check_new_tab():
     driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver))['number_of_tabs'] = len(COMMON_PAGE.driver.window_handles)
-    common.switch_tabs(driver=COMMON_PAGE.driver, tab_id=COMMON_PAGE.driver.window_handles[
+    common.switch_tabs(driver_=COMMON_PAGE.driver, tab_id=COMMON_PAGE.driver.window_handles[
         driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver)).get('number_of_tabs')-1])
 
 

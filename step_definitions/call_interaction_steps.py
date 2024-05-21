@@ -12,7 +12,7 @@ WORKSHEET_QUESTIONS = {}
 
 def handle_dnc_dialog(action='accept', timeout=5, force=False):
     try:
-        common.wait_element_to_be_more_than(driver=CALL_INTERACTIONS.driver, element_xpath=CALL_INTERACTIONS.dnc_dialog,
+        common.wait_element_to_be_more_than(driver_=CALL_INTERACTIONS.driver, element_xpath=CALL_INTERACTIONS.dnc_dialog,
                                             element_number=0, timeout_in_seconds=3)
         for sec in range(timeout):
             if CALL_INTERACTIONS.get_dnc_dialog().is_displayed():
@@ -44,7 +44,7 @@ def check_script_call_tab():
             caller_data_available = True
             break
     assert caller_data_available, "CALLER DATA IS NOT BEING DISPLAYED/LOADED IN SCRIPT"
-    common.switch_tabs(driver=CALL_INTERACTIONS.driver, tab_id=CALL_INTERACTIONS.driver.current_window_handle)
+    common.switch_tabs(driver_=CALL_INTERACTIONS.driver, tab_id=CALL_INTERACTIONS.driver.current_window_handle)
 
 
 def check_connector_call_tab():
