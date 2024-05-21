@@ -67,3 +67,4 @@ Feature: ADP
   Examples:
     | station   | station_id      | station2  | station2_id     | inbound_number1 | inbound_number2 |
     | Softphone | 870000000001201 | WebRTC    | 870000000001202 | +18552519368    | 8552526469      |
+    | WebRTC    | 870000000001201 | Softphone | 870000000001202 | +18552519368    | 8552526469      |
