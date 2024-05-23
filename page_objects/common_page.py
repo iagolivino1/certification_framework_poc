@@ -5,7 +5,7 @@ class CommonPage(object):
     def __init__(self, driver=None):
         self.driver = driver
         self.modal_dialog = "//div[@class='f9-modal-dialog'][contains(., '<title>')]"
-        self.modal_submit_button = "//button[contains(@class, 'f9-positive-cta-btn') and contains(., '<text>')]"
+        self.modal_submit_button = "//button[contains(@class, 'f9-positive-cta-btn') and contains(., '<text>')] | //button[contains(@id, 'connect_station_btn') and contains(., '<text>')] "
         self.modal_back_button = "//button[@id='WizardBase-back-button']"
         self.available_skills = "//div[@data-f9-template='agent-skill-select-item']/label"
         self.all_skills_button = "//button[@id='agent-skill-select-toggle']"

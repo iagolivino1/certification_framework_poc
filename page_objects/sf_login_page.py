@@ -1,13 +1,12 @@
 from selenium.webdriver.common.by import By
 
-
-class LoginPage(object):
+class SFLoginPage(object):
     def __init__(self, driver=None):
         self.driver = driver
         self.user_input = "//input[@id='username']"
         self.pass_input = "//input[@id='password']"
-        self.login_button = "//input[@id='loginBtn'] | //button[@id='login_btn']"
-        self.url = 'https://login.eu.five9.com/'
+        self.login_button = "//input[@id='Login']"
+        self.url = 'https://login.salesforce.com/'
 
     def open_page(self):
         self.driver.get(self.url)

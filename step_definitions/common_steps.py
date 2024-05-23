@@ -101,7 +101,7 @@ def _skill(skill, action='select'):
 
 
 def select_modal_next_button():
-    next_button_texts = ['Next', 'OK', 'Yes', 'View My Dashboard']
+    next_button_texts = ['Next', 'OK', 'Yes', 'View My Dashboard', 'Confirm']
     text_ = ''
     for text in next_button_texts:
         text_ = text
