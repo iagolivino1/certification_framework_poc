@@ -15,7 +15,9 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 
 def new_driver(hub_url):
-    return Driver(hub_url).driver
+    driver_ = Driver(hub_url).driver
+    driver_.maximize_window()
+    return driver_
 
 
 def __set_config_file():

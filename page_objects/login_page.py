@@ -6,7 +6,7 @@ class LoginPage(object):
         self.driver = driver
         self.user_input = "//input[@id='username']"
         self.pass_input = "//input[@id='password']"
-        self.login_button = "//input[@id='loginBtn']"
+        self.login_button = "//input[@id='loginBtn'] | //button[@id='sfli_login_btn']"
         self.url = 'https://login.eu.five9.com/'
 
     def open_page(self):
