@@ -147,6 +147,10 @@ def wait_element_to_not_be_displayed(driver_, element_xpath, timeout_in_seconds=
         ec.invisibility_of_element((By.XPATH, element_xpath)))
 
 
+def get_shadow_root(driver_, element):
+    return driver_.execute_script('return arguments[0].shadowRoot', element)
+
+
 def move_to_and_click_element(driver_, element_xpath):
     action = ActionChains(driver_)
     action.move_to_element(driver_.find_element(By.XPATH, element_xpath)).click().perform()

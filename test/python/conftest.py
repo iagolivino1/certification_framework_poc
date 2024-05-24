@@ -12,7 +12,8 @@ pytest_plugins = [
    "step_definitions.home_page_steps",
    "step_definitions.login_steps",
    "step_definitions.station_setup_steps",
-   "step_definitions.call_interaction_steps"
+   "step_definitions.call_interaction_steps",
+   "step_definitions.adt_login_steps"
 ]
 
 

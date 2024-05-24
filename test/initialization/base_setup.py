@@ -25,5 +25,4 @@ def set_base_pages(instances=1):
     common_steps.STARTED_PAGES.append(agent_steps.AGENT_HOME)
     common_steps.STARTED_PAGES.append(home_page_steps.HOME_PAGE)
     common_steps.STARTED_PAGES.append(common_steps.COMMON_PAGE)
-    common_steps.STARTED_PAGES.append(common_steps.COMMON_PAGE)
     common_steps.STARTED_PAGES.append(station_setup_steps.STATION_SETUP)
