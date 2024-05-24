@@ -11,8 +11,8 @@ class StationSetupPage(object):
         self.pstn_station = "//label[@id='PSTN']"
         self.gateway_station = "//label[@id='GATEWAY']"
         self.station_input = "//input[contains(@id, '-stationid-input')] | //input[@id='station_number']"
-        self.station_tone_check_status = "//div[@id='station-tone-check-status']/span"
-        self.restart_station_button = "//button[@id='restartStationBtn']"
+        self.station_tone_check_status = "//div[@id='station-tone-check-status']/span | //*[@id='softphone-setup-panel']//span[@class='green']"
+        self.restart_station_button = "//button[@id='restartStationBtn'] | //button[@id='restart-softphone']"
 
     def get_none_station_type(self):
         return self.driver.find_element(By.XPATH, self.none_station)

@@ -7,6 +7,15 @@ LOGIN_PAGE = LoginPage()
 AGENT_CREDENTIALS = {}
 
 
+def check_force_login():
+    try:
+        common.wait_element_to_be_clickable(LOGIN_PAGE.driver,LOGIN_PAGE.force_login_button,5)
+        LOGIN_PAGE.get_force_login_button().click()
+        return
+    except:
+        return
+
+
 @given("I am in login page")
 @when("I am in login page")
 def see_login_page():
@@ -20,6 +29,7 @@ def perform_login():
     LOGIN_PAGE.get_user_input().send_keys(agent.get('user'))
     LOGIN_PAGE.get_password_input().send_keys(agent.get('pass'))
     LOGIN_PAGE.get_login_button().click()
+    check_force_login() #Used on SF - should not break other tests
 
 
 @then("I perform logout")

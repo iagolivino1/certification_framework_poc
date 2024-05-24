@@ -7,6 +7,7 @@ class LoginPage(object):
         self.user_input = "//input[@id='username']"
         self.pass_input = "//input[@id='password']"
         self.login_button = "//input[@id='loginBtn'] | //button[@id='login_btn']"
+        self.force_login_button = "//button[@id='force-login']"
         self.url = 'https://login.eu.five9.com/'
 
     def open_page(self):
@@ -23,3 +24,6 @@ class LoginPage(object):
 
     def get_login_button(self):
         return self.driver.find_element(By.XPATH, self.login_button)
+    
+    def get_force_login_button(self):
+        return self.driver.find_element(By.XPATH, self.force_login_button)

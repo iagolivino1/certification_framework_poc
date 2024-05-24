@@ -84,6 +84,17 @@ def all_skills(action='select'):
             COMMON_PAGE.get_all_skills_button().click()
         assert COMMON_PAGE.get_all_skills_button().text.strip() == 'Select All'
 
+def all_skills_sf(action='select'):
+    common.wait_page_element_load(COMMON_PAGE.driver,COMMON_PAGE.modal_dialog_skills_sf.replace('<title>',
+                                                                                     'Select Your Skills'))
+    if action == 'select' and not COMMON_PAGE.get_all_skills_sf_checkbox().is_selected():
+        COMMON_PAGE.get_all_skills_sf_label().click()
+    elif action == 'select' and COMMON_PAGE.get_all_skills_sf_checkbox().is_selected():
+        pass
+    elif not action == 'select' and not COMMON_PAGE.get_all_skills_sf_checkbox().is_selected():
+        pass
+    else:
+        COMMON_PAGE.get_all_skills_button().click()
 
 def _skill(skill, action='select'):
     validation_ = 'true'
@@ -152,6 +163,15 @@ def select_skill(action, skill_):
     wait_modal_dialog_open('skills', 30)
     if skill_ == 'all':
         all_skills(action)
+    else:
+        _skill(skill_, action)
+
+
+@when(parsers.parse("I {action} the {skill_} skill on SF"))
+@when(parsers.parse("I {action} {skill_} skills on SF"))
+def select_skill(action, skill_):
+    if skill_ == 'all':
+        all_skills_sf(action)
     else:
         _skill(skill_, action)
 
