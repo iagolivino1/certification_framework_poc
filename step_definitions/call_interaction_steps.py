@@ -51,11 +51,11 @@ def check_connector_call_tab():
     # last browser tab should be the connector tab
     common.system_wait(3)
     common_steps.check_new_tab()
-    assert driver.DRIVERS.get(common.get_driver_by_instance(CALL_INTERACTIONS.driver)).get('number_of_tabs') == \
-           len(CALL_INTERACTIONS.driver.window_handles), "NEW TAB FOR CONNECTOR DID NOT OPEN!"
-    common.wait_page_to_be_loaded(CALL_INTERACTIONS.driver)
-    assert CALL_INTERACTIONS.driver.current_url == CALL_INTERACTIONS.connector_url, \
-        f"CONNECTOR URL IS WRONG! BROWSER_URL: {CALL_INTERACTIONS.driver.current_url} | EXPECTED_URL: {CALL_INTERACTIONS.connector_url}"
+    assert driver.DRIVERS.get(common.get_driver_by_instance(common_steps.COMMON_PAGE.driver)).get('number_of_tabs') == \
+           len(common_steps.COMMON_PAGE.driver.window_handles), "NEW TAB FOR CONNECTOR DID NOT OPEN!"
+    common.wait_page_to_be_loaded(common_steps.COMMON_PAGE.driver)
+    assert common_steps.COMMON_PAGE.driver.current_url == common_steps.COMMON_PAGE.connector_url, \
+        f"CONNECTOR URL IS WRONG! BROWSER_URL: {common_steps.COMMON_PAGE.driver.current_url} | EXPECTED_URL: {common_steps.COMMON_PAGE.connector_url}"
     # log success
 
 

@@ -168,3 +168,25 @@ def element_recursive_click(driver_, element_xpath, click_times=1):
 
 def system_wait(time_to_wait=1):
     sleep(time_to_wait)
+
+
+def wait_condition(value1=None, value2=None, condition=None, timeout_in_seconds=15):
+    if not value1:
+        raise Exception("value1 VAR MUST HAVE AN ASSIGNED VALUE!")
+    for time_ in range(timeout_in_seconds):
+        if condition == 'eq':
+            return_ = value1 == value2
+        elif condition == 'more':
+            return_ = value1 > value2
+        elif condition == 'less':
+            return_ = value1 < value2
+        elif condition == 'null':
+            return_ == value1 is None
+        elif condition == 'n_null':
+            return_ == value1 is not None
+        else:
+            raise Exception(f"INVALID CONDITION: {condition}")
+        if return_:
+            return True
+        sleep(1)
+    raise TimeoutException(f"CONDITION WAS NOT TRUE: {value1} {condition} {value2} ")

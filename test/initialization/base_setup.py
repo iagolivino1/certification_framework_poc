@@ -15,6 +15,11 @@ def set_base_pages(instances=1):
     if login_url:
         login_steps.LOGIN_PAGE.url = login_url
 
+    # set connector url if any
+    connector_url_ = get_config_file_section(lab_config, 'configuration').get('connector_url')
+    if connector_url_:
+        common_steps.COMMON_PAGE.connector_url = connector_url_
+
     # start number of browser instances will be needed
     hub_url = get_config_file_section(f'{driver.CONFIG_FILE}', 'configuration').get('hub_url')
     for i in range(instances):
