@@ -1,9 +1,10 @@
 import common
 from page_objects.sf_login_page import SFLoginPage
-from pytest_bdd import given, then, when
-from step_definitions import sf_home_page_steps, agent_steps, common_steps
+from page_objects.sf_agent_home_page import SFAgentHomePage
+from pytest_bdd import given, when
 
 LOGIN_PAGE = SFLoginPage()
+HOME_PAGE = SFAgentHomePage()
 AGENT_CREDENTIALS = {}
 
 @given("I am in SF login page")
@@ -21,4 +22,4 @@ def perform_login():
 
 @when("I see the SF home page")
 def see_home_page():
-    common.wait_element_to_be_clickable(sf_home_page_steps.HOME_PAGE.driver, sf_home_page_steps.HOME_PAGE.logo_img)
+    common.wait_element_to_be_clickable(HOME_PAGE.driver, HOME_PAGE.logo_img)
