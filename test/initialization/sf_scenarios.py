@@ -1,15 +1,14 @@
 from common import *
-from step_definitions import call_interaction_steps, common_steps, sf_login_steps, sf_home_page_steps, sf_agent_steps
+from step_definitions import call_interaction_steps, common_steps, sf_login_steps, sf_agent_steps
 from test.initialization import base_setup
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
 
 
 def check_sf_basic_calls():
     base_setup.set_base_pages(1)
     common_steps.STARTED_PAGES.append(sf_login_steps.LOGIN_PAGE)
-    common_steps.STARTED_PAGES.append(sf_home_page_steps.HOME_PAGE)
-    common_steps.STARTED_PAGES.append(sf_agent_steps.SF_AGENT_HOME)
+    common_steps.STARTED_PAGES.append(sf_login_steps.HOME_PAGE)
+    common_steps.STARTED_PAGES.append(sf_agent_steps.AGENT_HOME)
+    common_steps.STARTED_PAGES.append(call_interaction_steps.CALL_INTERACTIONS)
 
     # set connector url if any
     lab_config = f"configuration/lab/{get_config_file_section('config.yml', 'configuration').get('lab')}.yml"

@@ -7,7 +7,7 @@ class StationSetupPage(object):
         self.setup_modal = "//div[@id='agent-prep-wizard']//div[contains(@class, 'f9-modal-dialog')]"
         self.none_station = "//label[@id='EMPTY'] | //input[@id='station_EMPTY']"
         self.softphone_station = "//label[@id='SOFTPHONE'] | //label[@for='station_SOFTPHONE']/i"
-        self.webrtc_station = "//label[@id='WEBRTC']"
+        self.webrtc_station = "//label[@id='WEBRTC'] | //label[@for='station_WEBRTC']/i"
         self.pstn_station = "//label[@id='PSTN']"
         self.gateway_station = "//label[@id='GATEWAY']"
         self.station_input = "//input[contains(@id, '-stationid-input')] | //input[@id='station_number']"
