@@ -50,20 +50,19 @@ def check_script_call_tab():
     common.switch_tabs(driver_=CALL_INTERACTION_PAGE.driver, tab_id=CALL_INTERACTION_PAGE.driver.current_window_handle)
 
 def check_adapter_script_call_tab():
-    common.move_to_and_click_element(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.get_script_tab)
-    # ActionChains(CALL_INTERACTIONS.driver).move_to_element(CALL_INTERACTIONS.get_script_tab).perform()
-    print("SCROLLED INTO VIEW")
+    main_window_handle = CALL_INTERACTIONS.driver.current_window_handle
     
-    CALL_INTERACTION_PAGE.get_script_tab().click()
-    for handle in CALL_INTERACTION_PAGE.driver.window_handles:
-        script_window_opened = False
-        title = CALL_INTERACTION_PAGE.driver.title
-        if title.lower().__contains__("five9 adapter - script"):
-            script_window_opened = True
-            break
-        else:
-            CALL_INTERACTION_PAGE.driver.switch_to.window(handle)
+    common.system_wait(5)
+    common.move_to_and_click_element(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.script_tab)
+    common.system_wait(5) #waiting for window to open and load the correct title
+
+    # Checking all the open windows for the SCRIPT one
+    for i in range(0,5):
+        script_window_opened = common.check_window_is_open(CALL_INTERACTIONS.driver, "five9 adapter - script")
+        if script_window_opened: break
+        common.system_wait(1)
     
+    CALL_INTERACTIONS.driver.switch_to.window(main_window_handle)
     assert script_window_opened, "Script window was not opened"
     
 
@@ -99,48 +98,48 @@ def fill_worksheet_call_tab():
     CALL_INTERACTION_PAGE.get_worksheet_finish_question_button().click()
 
 def fill_adapter_worksheet_call_tab():
-    CALL_INTERACTION_PAGE.get_worksheet_button().click()
-    
-    for handle in CALL_INTERACTION_PAGE.driver.window_handles:
-        worksheet_window_opened = False
-        title = CALL_INTERACTION_PAGE.driver.title
-        if title.lower().__contains__("five9 adapter - script"):
-            worksheet_window_opened = True
-            break
-        else:
-            CALL_INTERACTION_PAGE.driver.switch_to.window(handle)
+    main_window_handle = CALL_INTERACTIONS.driver.current_window_handle
+    common.find_and_switch_to_frame(CALL_INTERACTIONS.driver, "SoftphoneIframe")
+    common.move_to_and_click_element(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.worksheet_button)
+
+    #Wait for worksheet window to open
+    #common.system_wait(5)
+    for i in range(0,5):
+        worksheet_window_opened = common.check_window_is_open(CALL_INTERACTIONS.driver,"five9 adapter - worksheet")
+        if worksheet_window_opened: break
+        common.system_wait(1)
+
+    assert worksheet_window_opened, "Worksheet window was not opened"
 
     if worksheet_window_opened:
+        common.wait_element_to_be_clickable(CALL_INTERACTIONS.driver,CALL_INTERACTIONS.worksheet_finish_question_button)
         # set questions
-        for question_ in CALL_INTERACTION_PAGE.get_worksheet_questions():
-            WORKSHEET_QUESTIONS[question_.text.split('.')[1]] = ''
+        for question_ in CALL_INTERACTIONS.get_worksheet_questions():
+            WORKSHEET_QUESTIONS[question_.text] = ''
 
         # answer questions
         has_next_question = CALL_INTERACTION_PAGE.get_worksheet_next_question_button().is_enabled()
         while has_next_question:
-            current_question_ = CALL_INTERACTION_PAGE.get_worksheet_current_question().text.split(')')[1]
+            current_question_ = CALL_INTERACTION_PAGE.get_worksheet_current_question().text
             answer_ = f'question "{current_question_}" answer!'
             CALL_INTERACTION_PAGE.get_worksheet_question_answer_text_area().send_keys(answer_)
             WORKSHEET_QUESTIONS[current_question_] = answer_
             has_next_question = CALL_INTERACTION_PAGE.get_worksheet_next_question_button().is_enabled()
             if has_next_question:
-                CALL_INTERACTION_PAGE.get_worksheet_next_question_button().click()
+                CALL_INTERACTIONS.get_worksheet_next_question_button().click()
+                for i in range(0,10):
+                    if CALL_INTERACTION_PAGE.get_worksheet_current_question().text != current_question_: break 
+                    common.system_wait(0.5)
+
         CALL_INTERACTION_PAGE.get_worksheet_finish_question_button().click()
 
-def handle_call():
-    common.wait_element_to_not_be_displayed(CALL_INTERACTION_PAGE.driver,"//td[@id='sidebarCell']//iframe[@id='SoftphoneIframe']")
-    common.wait_page_element_load(CALL_INTERACTION_PAGE.driver, "//td[@id='sidebarCell']//iframe[@id='SoftphoneIframe']")
+    CALL_INTERACTION_PAGE.driver.switch_to.window(main_window_handle)
 
-    iframes = CALL_INTERACTION_PAGE.driver.find_elements(By.XPATH, "//iframe")
-    for index, iframe in enumerate(iframes):
-        print(iframe.get_property("name"))
-        if iframe.get_property("name") == 'SoftphoneIframe':
-            common.switch_to_frame(CALL_INTERACTION_PAGE.driver, iframe)
-            return
-    # common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.softphone_iframe)
-    # common.switch_to_frame(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.get_iframe_softphone())
-    # common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.adapter_agent_call_panel, 120)
-    # time.sleep(20)
+
+def handle_call():
+    common.wait_element_to_not_be_displayed(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.softphone_iframe)
+    common.wait_page_element_load(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.softphone_iframe)
+    common.find_and_switch_to_frame(CALL_INTERACTION_PAGE.driver, "SoftphoneIframe")
 
 @when(parsers.parse("I select {campaign} outbound campaign"))
 def select_outbound_campaign(campaign):

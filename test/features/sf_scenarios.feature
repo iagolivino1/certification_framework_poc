@@ -30,9 +30,9 @@ Feature: SF
         When I select ds_out1 outbound campaign
         When I call <inbound_number2> from adapter
         When I check the call adapter script tab
-        # When I fill the call adapter worksheet tab
+        When I fill the call adapter worksheet tab
         # When I crosscheck the call worksheet tab answers
-        # When I set No Disposition disposition
+        When I set Done disposition on adapter
         # When I check the call connector tab
         # When I close the current browser tab
         # When I change agent state to ready for voice
@@ -49,4 +49,4 @@ Feature: SF
 
         Examples:
         | station   | station_id      | station2  | station2_id     | inbound_number1 | inbound_number2 |
-        | Softphone | 36              | WebRTC    | 36              | 8552526469      | 9255748216      |
+        | Softphone | 32              | WebRTC    | 36              | 8552526469      | 9255748216      |
