@@ -31,11 +31,11 @@ Feature: SF
         When I call <inbound_number2> from adapter
         When I check the call adapter script tab
         When I fill the call adapter worksheet tab
-        # When I crosscheck the call worksheet tab answers
+        When I crosscheck the call adapter worksheet tab answers
         When I set Done disposition on adapter
         # When I check the call connector tab
         # When I close the current browser tab
-        # When I change agent state to ready for voice
+        When I change agent state to ready for voice on adapter
 
         # When I set the browser number 2
         # And I switch to Softphone Iframe
@@ -49,4 +49,5 @@ Feature: SF
 
         Examples:
         | station   | station_id      | station2  | station2_id     | inbound_number1 | inbound_number2 |
-        | Softphone | 32              | WebRTC    | 36              | 8552526469      | 9255748216      |
+        | Softphone | 37              | WebRTC    | 36              | 8552526469      | 9255748216      |
+        # | Softphone | 870000000001202 | WebRTC    | 870000000001201 | +18552519368    | 8552526469      |
