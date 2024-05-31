@@ -24,3 +24,32 @@ def set_disposition(disposition):
     AGENT_HOME.get_select_disposition_radio_btn(disposition).click()
     AGENT_HOME.get_end_interaction_btn().click()
     
+@when(parsers.parse("I change agent state to ready for {options} on adapter"))
+def set_agent_ready_for(options):
+    options = options.split(',')
+
+    common.wait_element_to_be_clickable(AGENT_HOME.driver, AGENT_HOME.agent_state_button)
+    AGENT_HOME.get_agent_state_button().click()
+    AGENT_HOME.get_agent_ready_for_option().click()
+    common.system_wait(5)
+
+    #Unselect all options
+    # if AGENT_HOME.get_text_channel_input().is_selected(): AGENT_HOME.get_text_channel_checkbox().click()
+    if AGENT_HOME.get_voice_channel_input().is_selected(): AGENT_HOME.get_voice_channel_checkbox().click()
+    if AGENT_HOME.get_voicemail_channel_input().is_selected(): AGENT_HOME.get_voicemail_channel_checkbox().click()
+
+
+    for option in options:
+        # if option.lower() == 'text' and not AGENT_HOME.get_text_channel_input().is_selected():
+        #     AGENT_HOME.get_text_channel_checkbox().click()
+        if option.lower() == 'voice' and not AGENT_HOME.get_voice_channel_input().is_selected():
+            AGENT_HOME.get_voice_channel_checkbox().click()
+        elif option.lower() == 'vm' and not AGENT_HOME.get_voicemail_channel_input().is_selected():
+            AGENT_HOME.get_voicemail_channel_checkbox().click()
+        else:
+            raise NotImplementedError(f"NOT VALID OR NOT IMPLEMENTED OPTION: {option}")
+
+    assert AGENT_HOME.get_channels_confirm_btn().text == f"Confirm  ({options.__len__()})", "Selected options amount doesn't match the requested amount"
+    AGENT_HOME.get_channels_confirm_btn().click()
+    
+    common.wait_element_class_contains(AGENT_HOME.driver, AGENT_HOME.agent_state_button, "btn-green")
