@@ -14,6 +14,7 @@ MODAL_TYPES = {
     'inbound': '(Inbound)',
     'manual': '(Manual)'
 }
+AGENT_CREDENTIALS = {}
 
 
 def reset_variables():
@@ -23,21 +24,27 @@ def reset_variables():
     pass
 
 
-def get_free_agent():
+def update_number_of_tabs(driver_):
+    driver.DRIVERS.get(common.get_driver_by_instance(driver_))['number_of_tabs'] = len(driver_.window_handles)
+
+
+def get_free_agent(login_type=None):
     agent = {}
-    for agent_ in login_steps.AGENT_CREDENTIALS:
-        is_free = login_steps.AGENT_CREDENTIALS.get(agent_).get('free')
+    for agent_ in AGENT_CREDENTIALS:
+        is_free = AGENT_CREDENTIALS.get(agent_).get('free')
         if is_free or is_free is None:
-            agent = login_steps.AGENT_CREDENTIALS.get(agent_)
+            agent = AGENT_CREDENTIALS.get(agent_)
             agent['free'] = False
             agent['driver'] = login_steps.LOGIN_PAGE.driver
-            if 'qalogin' in login_steps.LOGIN_PAGE.url:
-                agent['login_type'] = 'emulation'
-            elif 'qaapp' in login_steps.LOGIN_PAGE.url:
-                agent['login_type'] = 'direct'
-            else:
-                agent['login_type'] = 'unknown'
-            login_steps.AGENT_CREDENTIALS[agent_] = agent
+            if not login_type:
+                if 'qalogin' in login_steps.LOGIN_PAGE.url:
+                    login_type = 'emulation'
+                elif 'qaapp' in login_steps.LOGIN_PAGE.url:
+                    login_type = 'direct'
+                else:
+                    login_type = 'unknown'
+            agent['login_type'] = login_type
+            AGENT_CREDENTIALS[agent_] = agent
             break
     if not agent:
         raise Exception('no free agent available')
@@ -119,6 +126,11 @@ def select_modal_next_button():
 
 @when("I check the new browser tab opened")
 def check_new_tab():
+    common.system_wait(3)
+    driver_number_of_tabs = driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver)).get('number_of_tabs')
+    current_number_of_tabs = len(COMMON_PAGE.driver.window_handles)
+    assert driver_number_of_tabs < current_number_of_tabs, \
+        f"NEW TAB NOT FOUND. CURRENT NUMBER OF TABS: {current_number_of_tabs} SHOULD BE MORE THAN: {driver_number_of_tabs}"
     driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver))['number_of_tabs'] = len(COMMON_PAGE.driver.window_handles)
     common.switch_tabs(driver_=COMMON_PAGE.driver, tab_id=COMMON_PAGE.driver.window_handles[
         driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver)).get('number_of_tabs')-1])
@@ -128,6 +140,7 @@ def check_new_tab():
 def close_current_browser_tab():
     common.BROWSER_TABS.pop(COMMON_PAGE.driver.current_window_handle)
     COMMON_PAGE.driver.close()
+    common.system_wait(3)
     assert driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver)).get('number_of_tabs') > len(COMMON_PAGE.driver.window_handles), \
         f"CURRENT TAB WAS NOT SUCCESSFULLY CLOSED: {COMMON_PAGE.driver.title}"
     driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver))['number_of_tabs'] = len(COMMON_PAGE.driver.window_handles)
@@ -173,3 +186,8 @@ def open_new_tab(url):
         COMMON_PAGE.driver.execute_script("window.open('about:blank');")
     else:
         COMMON_PAGE.driver.get(url)
+
+
+@when(parsers.parse("I switch to tab with {title} title"))
+def switch_to_tab_with_title(title):
+    common.switch_tabs(COMMON_PAGE.driver, tab_title=title)

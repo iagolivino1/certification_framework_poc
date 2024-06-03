@@ -13,6 +13,7 @@ class ADTAdapterPage(object):
         self.gateway_station_option = "//input[@id='station_GATEWAY']"
         self.none_station_option = "//input[@id='station_EMPTY']"
         self.station_number_input = "//input[@id='station_number']"
+        self.remember_my_selection_checkbox = "//input[@id='remember_station']"
         self.confirm_selection_button = "//button[contains(text(), 'Confirm')]"
         self.station_setup_devices = "//div[@data-f9-template='setup-devices']"
         self.reset_station_button = "//button[@id='restart-softphone']"
@@ -48,6 +49,13 @@ class ADTAdapterPage(object):
         self.all_tools_toggle = "//div[@id='all-tools-toggle']"
         self.script_button = "//button[@id='script_btn']"
         self.worksheet_button = "//button[@id='worksheet_btn']"
+        self.set_disposition_button = "//button[@id='call_endInteractionBtn']"
+        self.dispositions_view = "//div[@class='dispositions-view']"
+        self.dispositions_list = "//div[@id='dispFilteredList_call']//li"
+        self.selected_disposition = "//label[contains(., '<text>')]/../input"
+        self.end_call_interaction_button = "//button[@id='setDisposition_call']"
+        self.inbound_call_panel = "//header[contains(text(), 'Inbound Call')]/.."
+        self.active_call_type = "//p[@id='active_callType']"
 
     def get_content_header(self):
         return self.driver.find_element(By.XPATH, self.content_header)
@@ -72,6 +80,9 @@ class ADTAdapterPage(object):
 
     def get_station_number_input(self):
         return self.driver.find_element(By.XPATH, self.station_number_input)
+
+    def get_remember_my_selection_checkbox(self):
+        return self.driver.find_element(By.XPATH, self.remember_my_selection_checkbox)
 
     def get_confirm_selection_button(self):
         return self.driver.find_element(By.XPATH, self.confirm_selection_button)
@@ -152,7 +163,7 @@ class ADTAdapterPage(object):
         return self.driver.find_element(By.XPATH, self.select_campaign_button)
 
     def get_campaign_options(self):
-        return self.driver.find_element(By.XPATH, self.campaign_options)
+        return self.driver.find_elements(By.XPATH, self.campaign_options)
 
     def get_dial_button(self):
         return self.driver.find_element(By.XPATH, self.dial_button)
@@ -177,3 +188,24 @@ class ADTAdapterPage(object):
 
     def get_worksheet_button(self):
         return self.driver.find_element(By.XPATH, self.worksheet_button)
+
+    def get_set_disposition_button(self):
+        return self.driver.find_element(By.XPATH, self.set_disposition_button)
+
+    def get_dispositions_view(self):
+        return self.driver.find_element(By.XPATH, self.dispositions_view)
+
+    def get_dispositions_list(self):
+        return self.driver.find_elements(By.XPATH, self.dispositions_list)
+
+    def get_selected_disposition(self, text=''):
+        return self.driver.find_element(By.XPATH, self.selected_disposition.replace('<text>', text))
+
+    def get_end_call_interaction_button(self):
+        return self.driver.find_element(By.XPATH, self.end_call_interaction_button)
+
+    def get_inbound_call_panel(self):
+        return self.driver.find_element(By.XPATH, self.inbound_call_panel)
+
+    def get_active_call_type(self):
+        return self.driver.find_element(By.XPATH, self.active_call_type)

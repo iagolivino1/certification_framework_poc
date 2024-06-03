@@ -3,13 +3,17 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
 import common
-from step_definitions import common_steps, adt_login_steps
+from step_definitions import common_steps, script_steps
+from step_definitions.adapters import adt_login_steps, adt_adapter_steps, adt_worksheet_steps
 from test.initialization import base_setup
 
 
 def login_adt():
     base_setup.set_base_pages()
     common_steps.STARTED_PAGES.append(adt_login_steps.ADT_LOGIN_PAGE)
+    common_steps.STARTED_PAGES.append(script_steps.SCRIPT_PAGE)
+    common_steps.STARTED_PAGES.append(adt_adapter_steps.ADT_ADAPTER_PAGE)
+    common_steps.STARTED_PAGES.append(adt_worksheet_steps.ADT_WORKSHEET_PAGE)
 
     # find the extension
     set_adapter_shortcut(adt_login_steps.EXTENSION_NAME)
@@ -18,7 +22,8 @@ def login_adt():
     # open the adapter window
     for attempt in range(10):
         common_steps.COMMON_PAGE.driver.find_element(By.TAG_NAME, "body").click()
-        pyautogui.hotkey(adt_login_steps.PLATFORM_HOTKEYS.get(common_steps.COMMON_PAGE.driver.caps.get('platformName'))[1], 'i')
+        pyautogui.hotkey(
+            adt_login_steps.PLATFORM_HOTKEYS.get(common_steps.COMMON_PAGE.driver.caps.get('platformName'))[1], 'i')
         common.system_wait(6)
         if len(common_steps.COMMON_PAGE.driver.window_handles) > 1:
             common.switch_tabs(driver_=common_steps.COMMON_PAGE.driver, tab_id=common_steps.COMMON_PAGE.driver.window_handles[1])
@@ -91,3 +96,6 @@ def set_adapter_url(extension_id):
         assert input_url.get_attribute('value') == adt_login_steps.ADT_LOGIN_PAGE.url, "COULD NOT SET THE CORRECT URL"
     common_steps.COMMON_PAGE.driver.find_element(By.XPATH, "//button[@id='save']").click()
     common.wait_element_attribute_contains(common_steps.COMMON_PAGE.driver, "//mark[@id='status']", 'innerText', "Options Saved")
+    tab_info = {'title': common_steps.COMMON_PAGE.driver.title,
+                'browser_number': int(common.get_driver_by_instance(common_steps.COMMON_PAGE.driver))}
+    common.BROWSER_TABS[common_steps.COMMON_PAGE.driver.current_window_handle] = tab_info

@@ -48,8 +48,11 @@ def get_tab_id_by_title(tab_list=None, tab_title=None):
     if not tab_list:
         tab_list = BROWSER_TABS
     for tab_ in tab_list:
-        if tab_list.get(tab_).get('title') == tab_title:
-            return tab_
+        try:
+            if tab_list.get(tab_).get('title') == tab_title:
+                return tab_
+        except AttributeError:
+            print(f"{tab_}: tab info was lost. if it is not updated automatically please check the after steps hook.")
     raise Exception(f"TAB TITLE {tab_title} NOT FOUND IN ANY OPENED TAB!")
 
 
@@ -65,6 +68,8 @@ def switch_tabs(driver_, tab_id=None, tab_title=None):
         driver_.switch_to.window(driver_.current_window_handle)
     except NoSuchWindowException:
         print('for some reason the current window/tab was already closed!')
+        driver.DRIVERS.get(get_driver_by_instance(driver_))['number_of_tabs'] = len(
+            driver_.window_handles)
 
     eligible_tabs = {}
     for tab_ in driver_.window_handles:
@@ -72,7 +77,12 @@ def switch_tabs(driver_, tab_id=None, tab_title=None):
     if tab_id:
         driver_.switch_to.window(tab_id)
     else:
-        if driver_.title != tab_title:
+        try:
+            title_ = driver_.title
+        except NoSuchWindowException:
+            driver_.switch_to.window(driver_.window_handles[0])
+            title_ = driver_.title
+        if title_ != tab_title:
             driver_.switch_to.window(get_tab_id_by_title(tab_list=eligible_tabs, tab_title=tab_title))
 
 
@@ -168,25 +178,3 @@ def element_recursive_click(driver_, element_xpath, click_times=1):
 
 def system_wait(time_to_wait=1):
     sleep(time_to_wait)
-
-
-def wait_condition(value1=None, value2=None, condition=None, timeout_in_seconds=15):
-    if not value1:
-        raise Exception("value1 VAR MUST HAVE AN ASSIGNED VALUE!")
-    for time_ in range(timeout_in_seconds):
-        if condition == 'eq':
-            return_ = value1 == value2
-        elif condition == 'more':
-            return_ = value1 > value2
-        elif condition == 'less':
-            return_ = value1 < value2
-        elif condition == 'null':
-            return_ == value1 is None
-        elif condition == 'n_null':
-            return_ == value1 is not None
-        else:
-            raise Exception(f"INVALID CONDITION: {condition}")
-        if return_:
-            return True
-        sleep(1)
-    raise TimeoutException(f"CONDITION WAS NOT TRUE: {value1} {condition} {value2} ")

@@ -4,7 +4,6 @@ from pytest_bdd import given, then, when
 from step_definitions import home_page_steps, agent_steps, common_steps
 
 LOGIN_PAGE = LoginPage()
-AGENT_CREDENTIALS = {}
 
 
 @given("I am in login page")
@@ -25,8 +24,8 @@ def perform_login():
 @then("I perform logout")
 def perform_logout():
     # get logged agents
-    for agent_ in AGENT_CREDENTIALS:
-        agent_info = AGENT_CREDENTIALS.get(agent_)
+    for agent_ in common_steps.AGENT_CREDENTIALS:
+        agent_info = common_steps.AGENT_CREDENTIALS.get(agent_)
         if not agent_info.get('free') and agent_info.get('free') is not None:
             common_steps.set_current_browser(common.get_driver_by_instance(agent_info.get('driver'), False).get('instance'))
             common.switch_tabs(agent_steps.AGENT_HOME.driver, tab_title='Agent Desktop Plus')
@@ -43,7 +42,7 @@ def perform_logout():
             agent_info['free'] = True
             agent_info['driver'] = None
             agent_info['login_type'] = None
-            AGENT_CREDENTIALS[agent_] = agent_info
+            common_steps.AGENT_CREDENTIALS[agent_] = agent_info
 
 
 @when("I see the home page")
