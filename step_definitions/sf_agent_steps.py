@@ -26,8 +26,8 @@ def set_disposition(disposition):
     
 @when(parsers.parse("I change agent state to ready for {options} on adapter"))
 def set_agent_ready_for(options):
-    options = options.split(',')
-
+    options = options.split(',') 
+    common.find_and_switch_to_frame(AGENT_HOME.driver, "SoftphoneIframe")
     common.wait_element_to_be_clickable(AGENT_HOME.driver, AGENT_HOME.agent_state_button)
     AGENT_HOME.get_agent_state_button().click()
     AGENT_HOME.get_agent_ready_for_option().click()

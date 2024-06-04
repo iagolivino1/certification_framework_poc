@@ -4,7 +4,7 @@ from test.initialization import base_setup
 
 
 def check_sf_basic_calls():
-    base_setup.set_base_pages(1)
+    base_setup.set_base_pages(2)
     common_steps.STARTED_PAGES.append(sf_login_steps.LOGIN_PAGE)
     common_steps.STARTED_PAGES.append(sf_login_steps.HOME_PAGE)
     common_steps.STARTED_PAGES.append(sf_agent_steps.AGENT_HOME)
