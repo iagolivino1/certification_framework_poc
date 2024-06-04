@@ -7,6 +7,7 @@ class SFAgentHomePage(object):
         self.logo_img = "//img[@id='phHeaderLogoImage']"
         self.agent_state_button = "//button[@id='agent-readyState']"
         self.agent_ready_for_option = "//li[@id='ready_state_ready_for']"
+        self.agent_logout_btn = "//div[@id='ready-states-logout-btn-comp']"
         self.new_call_btn = "//button[@id='newCall-btn']"
         self.softphone_iframe = "//iframe[@id='SoftphoneIframe']"
         self.iframe_user_input = "//input[@id='username']"
@@ -22,6 +23,10 @@ class SFAgentHomePage(object):
         self.voicemail_channel_checkbox = "//label[@for='channel_VOICE_MAIL']"
         self.voicemail_channel_input = "//input[@id='channel_VOICE_MAIL']"
         self.channels_confirm_btn = "//button[@id='channels_confirm_btn']"
+        self.contact_dropdown = "//button[@id='logName_btn']"
+        self.contact_recommendations = "//div[@class='recNameAndTitle']"
+        self.agent_logout_endshift_radiobtn = "//label[@title='End Shift']"
+        self.agent_logout_confirm_btn = "//button[@id='reason_codes_confirm_btn']"
 
     def get_agent_state_button(self):
         return self.driver.find_element(By.XPATH, self.agent_state_button)
@@ -76,3 +81,18 @@ class SFAgentHomePage(object):
     
     def get_channels_confirm_btn(self):
         return self.driver.find_element(By.XPATH, self.channels_confirm_btn)
+    
+    def get_contact_dropdown_btn(self):
+        return self.driver.find_element(By.XPATH, self.contact_dropdown)
+    
+    def get_contact_recommendations_list(self):
+        return self.driver.find_elements(By.XPATH, self.contact_recommendations)
+    
+    def get_agent_logout_button(self):
+        return self.driver.find_element(By.XPATH, self.agent_logout_btn)
+    
+    def get_agent_logout_endshift_radio_button(self):
+        return self.driver.find_element(By.XPATH, self.agent_logout_endshift_radiobtn)
+    
+    def get_agent_logout_confirm_button(self):
+        return self.driver.find_element(By.XPATH, self.agent_logout_confirm_btn)

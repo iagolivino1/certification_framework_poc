@@ -2,7 +2,7 @@ import os
 import yaml
 import driver
 from time import sleep
-from selenium.common import TimeoutException, NoSuchWindowException
+from selenium.common import TimeoutException, NoSuchWindowException, NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -177,7 +177,16 @@ def check_window_is_open(driver_, window_name):
 def find_and_switch_to_frame(driver_, frame_name):
     iframes = driver_.find_elements(By.XPATH, "//iframe")
     
+    if len(iframes) == 0:
+        driver_.refresh()
+        wait_page_to_be_loaded(driver_)
+        iframes = driver_.find_elements(By.XPATH, "//iframe")
+
+        if len(iframes) == 0:
+            raise NoSuchElementException
+
     for index, iframe in enumerate(iframes):
+        print(iframe)
         if iframe.get_property("name") == frame_name:
             switch_to_frame(driver_, iframe)
             return

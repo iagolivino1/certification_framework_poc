@@ -23,7 +23,27 @@ def reset_variables():
     pass
 
 
-def get_free_agent():
+# def get_free_agent():
+#     agent = {}
+#     for agent_ in login_steps.AGENT_CREDENTIALS:
+#         is_free = login_steps.AGENT_CREDENTIALS.get(agent_).get('free')
+#         if is_free or is_free is None:
+#             agent = login_steps.AGENT_CREDENTIALS.get(agent_)
+#             agent['free'] = False
+#             agent['driver'] = login_steps.LOGIN_PAGE.driver
+#             if 'qalogin' in login_steps.LOGIN_PAGE.url:
+#                 agent['login_type'] = 'emulation'
+#             elif 'qaapp' in login_steps.LOGIN_PAGE.url:
+#                 agent['login_type'] = 'direct'
+#             else:
+#                 agent['login_type'] = 'unknown'
+#             login_steps.AGENT_CREDENTIALS[agent_] = agent
+#             break
+#     if not agent:
+#         raise Exception('no free agent available')
+#     return agent
+
+def get_free_agent(login_type=None):
     agent = {}
     for agent_ in login_steps.AGENT_CREDENTIALS:
         is_free = login_steps.AGENT_CREDENTIALS.get(agent_).get('free')
@@ -31,12 +51,14 @@ def get_free_agent():
             agent = login_steps.AGENT_CREDENTIALS.get(agent_)
             agent['free'] = False
             agent['driver'] = login_steps.LOGIN_PAGE.driver
-            if 'qalogin' in login_steps.LOGIN_PAGE.url:
-                agent['login_type'] = 'emulation'
-            elif 'qaapp' in login_steps.LOGIN_PAGE.url:
-                agent['login_type'] = 'direct'
-            else:
-                agent['login_type'] = 'unknown'
+            if not login_type:
+                if 'qalogin' in login_steps.LOGIN_PAGE.url:
+                    login_type = 'emulation'
+                elif 'qaapp' in login_steps.LOGIN_PAGE.url:
+                    login_type = 'direct'
+                else:
+                    login_type = 'unknown'
+            agent['login_type'] = login_type
             login_steps.AGENT_CREDENTIALS[agent_] = agent
             break
     if not agent:
@@ -142,7 +164,9 @@ def close_current_browser_tab():
     assert driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver)).get('number_of_tabs') > len(COMMON_PAGE.driver.window_handles), \
         f"CURRENT TAB WAS NOT SUCCESSFULLY CLOSED: {COMMON_PAGE.driver.title}"
     driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver))['number_of_tabs'] = len(COMMON_PAGE.driver.window_handles)
-    common.switch_tabs(COMMON_PAGE.driver, tab_id=COMMON_PAGE.driver.window_handles[len(COMMON_PAGE.driver.window_handles)-1])
+    # Changed the call below to always get the first window handle - On Adapter there might be more than 2 windows - TODO: Improve this call or revert 
+    # common.switch_tabs(COMMON_PAGE.driver, tab_id=COMMON_PAGE.driver.window_handles[len(COMMON_PAGE.driver.window_handles)-1])
+    common.switch_tabs(COMMON_PAGE.driver, tab_id=COMMON_PAGE.driver.window_handles[0])
     # log success
 
 

@@ -53,6 +53,7 @@ def check_adapter_script_call_tab():
     main_window_handle = CALL_INTERACTIONS.driver.current_window_handle
     
     common.system_wait(5)
+    common.wait_element_to_be_clickable(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.script_tab)
     common.move_to_and_click_element(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.script_tab)
     common.system_wait(5) #waiting for window to open and load the correct title
 
@@ -100,6 +101,7 @@ def fill_worksheet_call_tab():
 def fill_adapter_worksheet_call_tab():
     main_window_handle = CALL_INTERACTIONS.driver.current_window_handle
     common.find_and_switch_to_frame(CALL_INTERACTIONS.driver, "SoftphoneIframe")
+    common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.worksheet_button)
     common.move_to_and_click_element(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.worksheet_button)
 
     #Wait for worksheet window to open
@@ -137,7 +139,9 @@ def fill_adapter_worksheet_call_tab():
 
 
 def handle_call():
-    common.wait_element_to_not_be_displayed(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.softphone_iframe)
+    CALL_INTERACTIONS.driver.refresh()
+    common.system_wait(10)
+    # common.wait_element_to_not_be_displayed(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.softphone_iframe)
     common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.softphone_iframe)
     common.find_and_switch_to_frame(CALL_INTERACTIONS.driver, "SoftphoneIframe")
 
@@ -246,5 +250,9 @@ def receive_inbound_call():
     common.wait_element_attribute_contains(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.hold_call_button, 'data-id', 'toggleHold')
     assert 'Live Call' in CALL_INTERACTIONS.get_call_voice_details_header().text, "LIVE CALL WAS NOT STARTED"
 
-
+@when("I receive an inbound call on adapter")
+def receive_inbound_call():
+    handle_call()
+    common.wait_element_to_be_clickable(CALL_INTERACTIONS.driver,CALL_INTERACTIONS.hold_call_button)
+    assert 'Inbound Call' in CALL_INTERACTIONS.get_call_voice_details_header().text, "LIVE CALL WAS NOT STARTED"
 
