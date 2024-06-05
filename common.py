@@ -2,13 +2,14 @@ import os
 import yaml
 import driver
 from time import sleep
-from selenium.common import TimeoutException, NoSuchWindowException
+from selenium.common import TimeoutException, NoSuchWindowException, StaleElementReferenceException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
 
+TEST_INFO = {}
 BROWSER_TABS = {}
 
 
@@ -57,10 +58,6 @@ def get_tab_id_by_title(tab_list=None, tab_title=None):
 
 
 def switch_tabs(driver_, tab_id=None, tab_title=None):
-    """
-    only use this method without @tab when you are working with 2 tabs
-    for more than 2 tabs you should always pass the @tab name
-    """
     # make sure that the current window handle is selected
     # to avoid opening new tabs (some kind of script or even manually)
     # so driver gets confused and does not select/stay on the correct current tab
@@ -155,6 +152,17 @@ def wait_elements_to_be_less_than(driver_, element_xpath, element_number, timeou
 def wait_element_to_not_be_displayed(driver_, element_xpath, timeout_in_seconds=60):
     WebDriverWait(driver_, timeout_in_seconds).until(
         ec.invisibility_of_element((By.XPATH, element_xpath)))
+
+
+def wait_element_to_be_enabled(driver_, element_xpath, timeout_in_seconds=30):
+    for time_ in range(timeout_in_seconds):
+        try:
+            if driver_.find_element(By.XPATH, element_xpath).is_enabled():
+                return True
+        except StaleElementReferenceException:
+            pass
+        system_wait(1)
+    raise TimeoutException(f"ELEMENT WAS NOT ENABLED. WAIT TIME: {timeout_in_seconds}")
 
 
 def get_shadow_root(driver_, element):

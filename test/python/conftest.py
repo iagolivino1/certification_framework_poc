@@ -14,9 +14,9 @@ pytest_plugins = [
    "step_definitions.script_steps",
    "step_definitions.station_setup_steps",
    "step_definitions.call_interaction_steps",
-   "step_definitions.adapters.adt_login_steps",
-   "step_definitions.adapters.adt_adapter_steps",
-   "step_definitions.adapters.adt_worksheet_steps"
+   "step_definitions.adapters.adapter_login_steps",
+   "step_definitions.adapters.adapter_steps",
+   "step_definitions.adapters.adapter_worksheet_steps"
 ]
 
 

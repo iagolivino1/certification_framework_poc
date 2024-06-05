@@ -4,9 +4,9 @@ from selenium.webdriver.common.by import By
 class LoginPage(object):
     def __init__(self, driver=None):
         self.driver = driver
-        self.user_input = "//input[@id='username']"
-        self.pass_input = "//input[@id='password']"
-        self.login_button = "//input[@id='loginBtn'] | //button[@id='sfli_login_btn']"
+        self.user_input = "//input[@id='username'] | //input[@id='Login-username-input']"
+        self.pass_input = "//input[@id='password'] | //input[@id='Login-password-input']"
+        self.login_button = "//input[@id='loginBtn'] | //button[@id='Login-login-button']"
         self.url = 'https://login.eu.five9.com/'
 
     def open_page(self):

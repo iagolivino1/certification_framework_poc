@@ -15,3 +15,4 @@ chrome_flags:
 
 chrome_extensions:
     softphone: 'softphone.crx'
+    adt_plus: 'adt_plus.crx'

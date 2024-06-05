@@ -56,6 +56,7 @@ class ADTAdapterPage(object):
         self.end_call_interaction_button = "//button[@id='setDisposition_call']"
         self.inbound_call_panel = "//header[contains(text(), 'Inbound Call')]/.."
         self.active_call_type = "//p[@id='active_callType']"
+        self.active_caller_name = "//p[@id='active_callerName']"
 
     def get_content_header(self):
         return self.driver.find_element(By.XPATH, self.content_header)
@@ -94,7 +95,7 @@ class ADTAdapterPage(object):
         return self.driver.find_element(By.XPATH, self.reset_station_button)
 
     def get_station_connection_status(self):
-        return self.driver.find_elements(By.XPATH, self.station_connection_status)
+        return self.driver.find_element(By.XPATH, self.station_connection_status)
 
     def get_loading_label(self):
         return self.driver.find_element(By.XPATH, self.loading_label)
@@ -109,7 +110,7 @@ class ADTAdapterPage(object):
         return self.driver.find_element(By.XPATH, self.ready_for_last_selection_option)
 
     def get_ready_for_options(self):
-        return self.driver.find_elements(By.XPATH, self.ready_for_options)
+        return self.driver.find_element(By.XPATH, self.ready_for_options)
 
     def get_not_ready_option(self):
         return self.driver.find_element(By.XPATH, self.not_ready_option)
@@ -209,3 +210,6 @@ class ADTAdapterPage(object):
 
     def get_active_call_type(self):
         return self.driver.find_element(By.XPATH, self.active_call_type)
+
+    def get_active_caller_name(self):
+        return self.driver.find_element(By.XPATH, self.active_caller_name)

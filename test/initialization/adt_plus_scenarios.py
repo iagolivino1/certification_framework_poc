@@ -1,30 +1,31 @@
 import pyautogui
+import common
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
-
-import common
-from step_definitions import common_steps, script_steps
-from step_definitions.adapters import adt_login_steps, adt_adapter_steps, adt_worksheet_steps
+from step_definitions import common_steps, script_steps, call_interaction_steps
+from step_definitions.adapters import adapter_login_steps, adapter_steps, adapter_worksheet_steps
 from test.initialization import base_setup
 
 
-def login_adt():
-    base_setup.set_base_pages()
-    common_steps.STARTED_PAGES.append(adt_login_steps.ADT_LOGIN_PAGE)
+def check_adt_basic_calls():
+    base_setup.set_base_pages(instances=2)
+    common_steps.STARTED_PAGES.append(adapter_login_steps.ADAPTER_LOGIN_PAGE)
     common_steps.STARTED_PAGES.append(script_steps.SCRIPT_PAGE)
-    common_steps.STARTED_PAGES.append(adt_adapter_steps.ADT_ADAPTER_PAGE)
-    common_steps.STARTED_PAGES.append(adt_worksheet_steps.ADT_WORKSHEET_PAGE)
+    common_steps.STARTED_PAGES.append(adapter_steps.ADAPTER_PAGE)
+    common_steps.STARTED_PAGES.append(adapter_worksheet_steps.ADAPTER_WORKSHEET_PAGE)
+    common_steps.STARTED_PAGES.append(call_interaction_steps.CALL_INTERACTION_PAGE)
 
     # find the extension
-    set_adapter_shortcut(adt_login_steps.EXTENSION_NAME)
-    set_adapter_url(set_adapter_shortcut(adt_login_steps.EXTENSION_NAME, True))
+    set_adapter_shortcut(adapter_login_steps.EXTENSION_NAME)
+    set_adapter_url(set_adapter_shortcut(adapter_login_steps.EXTENSION_NAME, True))
 
     # open the adapter window
     for attempt in range(10):
-        common_steps.COMMON_PAGE.driver.find_element(By.TAG_NAME, "body").click()
+        common.wait_element_to_be_clickable(common_steps.COMMON_PAGE.driver, "//body")
+        common.click_element(common_steps.COMMON_PAGE.driver, common_steps.COMMON_PAGE.driver.find_element(By.TAG_NAME, "body"))
         pyautogui.hotkey(
-            adt_login_steps.PLATFORM_HOTKEYS.get(common_steps.COMMON_PAGE.driver.caps.get('platformName'))[1], 'i')
-        common.system_wait(6)
+            adapter_login_steps.PLATFORM_HOTKEYS.get(common_steps.COMMON_PAGE.driver.caps.get('platformName'))[1], 'i')
+        common.system_wait(2)
         if len(common_steps.COMMON_PAGE.driver.window_handles) > 1:
             common.switch_tabs(driver_=common_steps.COMMON_PAGE.driver, tab_id=common_steps.COMMON_PAGE.driver.window_handles[1])
             if common_steps.COMMON_PAGE.driver.title != 'Adapter':
@@ -32,6 +33,7 @@ def login_adt():
                 break
 
 
+# ----- SETUP ----- #
 def set_adapter_shortcut(extension_text, return_id=False):
     common_steps.COMMON_PAGE.driver.get("chrome://extensions")
     extension_manager_element_shadow = common_steps.COMMON_PAGE.driver.find_element(By.XPATH, "//extensions-manager")
@@ -73,13 +75,18 @@ def set_adapter_shortcut(extension_text, return_id=False):
     edit_shortcut_button = edit_shortcut_shadow.shadow_root.find_element(By.CSS_SELECTOR, "cr-icon-button#edit")
     edit_shortcut_button.click()
     edit_shortcut_shadow.shadow_root.find_element(By.CSS_SELECTOR, "cr-input").shadow_root.find_element(By.CSS_SELECTOR, "#input").click()
-    action.key_down(adt_login_steps.PLATFORM_HOTKEYS.get(common_steps.COMMON_PAGE.driver.caps.get('platformName'))[0])\
+    action.key_down(adapter_login_steps.PLATFORM_HOTKEYS.get(common_steps.COMMON_PAGE.driver.caps.get('platformName'))[0])\
         .send_keys('i')\
-        .key_up(adt_login_steps.PLATFORM_HOTKEYS.get(common_steps.COMMON_PAGE.driver.caps.get('platformName'))[0])\
+        .key_up(adapter_login_steps.PLATFORM_HOTKEYS.get(common_steps.COMMON_PAGE.driver.caps.get('platformName'))[0])\
         .perform()
 
 
 def set_adapter_url(extension_id):
+    lab_config = f"configuration/lab/{common.get_config_file_section('config.yml', 'configuration').get('lab')}.yml"
+    adapter_url = common.get_config_file_section(lab_config, 'configuration').get('adapter_login_url')
+    if not adapter_url:
+        adapter_url = adapter_login_steps.ADAPTER_LOGIN_PAGE.url
+    adapter_login_steps.ADAPTER_LOGIN_PAGE.url = adapter_url
     common_steps.COMMON_PAGE.driver.get(f"chrome-extension://{extension_id}/options.html")
     common.system_wait(2)
 
@@ -87,13 +94,13 @@ def set_adapter_url(extension_id):
     input_url = common_steps.COMMON_PAGE.driver.find_element(By.XPATH, "//input[@id='url']")
     input_url.clear()
     input_url.click()
-    input_url.send_keys(adt_login_steps.ADT_LOGIN_PAGE.url)
+    input_url.send_keys(adapter_url)
     try:
-        assert input_url.get_attribute('value') == adt_login_steps.ADT_LOGIN_PAGE.url
+        assert input_url.get_attribute('value') == adapter_url
     except AssertionError:
         input_url.clear()
-        input_url.send_keys(adt_login_steps.ADT_LOGIN_PAGE.url)
-        assert input_url.get_attribute('value') == adt_login_steps.ADT_LOGIN_PAGE.url, "COULD NOT SET THE CORRECT URL"
+        input_url.send_keys(adapter_url)
+        assert input_url.get_attribute('value') == adapter_url, "COULD NOT SET THE CORRECT URL"
     common_steps.COMMON_PAGE.driver.find_element(By.XPATH, "//button[@id='save']").click()
     common.wait_element_attribute_contains(common_steps.COMMON_PAGE.driver, "//mark[@id='status']", 'innerText', "Options Saved")
     tab_info = {'title': common_steps.COMMON_PAGE.driver.title,

@@ -1,8 +1,12 @@
+import common
 from common import *
 from step_definitions import login_steps, agent_steps, home_page_steps, common_steps, station_setup_steps
 
 
 def set_base_pages(instances=1):
+    common.TEST_INFO['lab'] = get_config_file_section('config.yml', 'configuration').get('lab').split('_')[0]
+    common.TEST_INFO['platform'] = get_config_file_section('config.yml', 'configuration').get('platform_tool').split('_')[0]
+
     lab_config = f"configuration/lab/{get_config_file_section('config.yml', 'configuration').get('lab')}.yml"
     try:
         common_steps.AGENT_CREDENTIALS = get_config_file_section(lab_config, 'credentials')

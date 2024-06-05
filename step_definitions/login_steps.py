@@ -34,8 +34,11 @@ def perform_logout():
             common.wait_page_element_load(agent_steps.AGENT_HOME.driver, agent_steps.AGENT_HOME.logout_reason_dialog)
             agent_steps.AGENT_HOME.get_confirm_logout_button().click()
             common.wait_page_to_be(agent_steps.AGENT_HOME.driver, 'index.html?loginError=true')
+            common.wait_page_element_load(LOGIN_PAGE.driver, LOGIN_PAGE.user_input)
             if agent_info.get('login_type') == 'emulation':
-                common.switch_tabs(driver_=agent_steps.AGENT_HOME.driver, tab_title='Five9. Inc. :: Applications')
+                tab_title_ = 'Five9 Inc. :: Applications' \
+                    if common.TEST_INFO.get('lab') == 'qa02' else 'Five9. Inc. :: Applications'
+                common.switch_tabs(driver_=agent_steps.AGENT_HOME.driver, tab_title=tab_title_)
                 home_page_steps.HOME_PAGE.get_logout_element().click()
                 common.wait_page_to_be(LOGIN_PAGE.driver, LOGIN_PAGE.url)
             # release agent

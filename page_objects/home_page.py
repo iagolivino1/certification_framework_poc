@@ -24,7 +24,3 @@ class HomePage(object):
 
     def get_web_agent_item(self):
         return self.driver.find_element(By.XPATH, self.web_agent_item)
-
-    def get_logout_element(self):
-        return self.driver.find_element(By.XPATH, self.logout_element)
-
