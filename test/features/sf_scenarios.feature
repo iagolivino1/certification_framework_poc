@@ -37,7 +37,7 @@ Feature: SF
         
         When I set the browser number 1
         When I open agent call option
-        When I select ds_out1 outbound campaign
+        When I select cert_out outbound campaign
         When I call <inbound_number2> from adapter
         When I check the call adapter script tab
         When I fill the call adapter worksheet tab
@@ -65,6 +65,7 @@ Feature: SF
 
         Examples:
         | station   | station_id      | station2  | station2_id     | inbound_number1 | inbound_number2 |
+        | Softphone | 660200000001160 | WebRTC    | 660200000001161 | 8882620935     | 8884343521    |
         # | Softphone | 870000000001201 | WebRTC    | 870000000001202 | +18552519368    | 8552526469      |
-        | Softphone | 32              | WebRTC    | 36              | 8669157428      | 9255748216      |
+        # | Softphone | 32              | WebRTC    | 36              | 8669157428      | 9255748216      |
         # | Softphone | 870000000001202 | WebRTC    | 870000000001201 | +18552519368    | 8552526469      |

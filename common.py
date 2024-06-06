@@ -186,7 +186,7 @@ def find_and_switch_to_frame(driver_, frame_name):
             raise NoSuchElementException
 
     for index, iframe in enumerate(iframes):
-        print(iframe)
+        # print(iframe)
         if iframe.get_property("name") == frame_name:
             switch_to_frame(driver_, iframe)
             return
