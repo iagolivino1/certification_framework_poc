@@ -38,7 +38,7 @@ Feature: ADP
 
     When I set the browser number 1
     When I open agent call option
-    When I select iferreira_out outbound campaign
+    When I select cert_out outbound campaign
     When I call <inbound_number2>
     When I check the call script tab
     When I fill the call worksheet tab
@@ -66,5 +66,5 @@ Feature: ADP
 
   Examples:
     | station   | station_id      | station2  | station2_id     | inbound_number1 | inbound_number2 |
-    | Softphone | 870000000001201 | WebRTC    | 870000000001202 | +18552519368    | 8552526469      |
-    | WebRTC    | 870000000001201 | Softphone | 870000000001202 | +18552519368    | 8552526469      |
+    | Softphone | 660200000001164 | WebRTC    | 660200000001165 | +18882620935    | +18884343521    |
+    | WebRTC    | 660200000001164 | Softphone | 660200000001165 | +18882620935    | +18884343521    |

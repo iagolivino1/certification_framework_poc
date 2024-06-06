@@ -1,9 +1,9 @@
 import common
 from pytest_bdd import when
-from page_objects.adapters.adapter_worksheet_page import ADTWorksheetPage
+from page_objects.adapters.adapter_worksheet_page import AdapterWorksheetPage
 from step_definitions import common_steps
 
-ADAPTER_WORKSHEET_PAGE = ADTWorksheetPage()
+ADAPTER_WORKSHEET_PAGE = AdapterWorksheetPage()
 WORKSHEET_QUESTIONS = {}
 
 
