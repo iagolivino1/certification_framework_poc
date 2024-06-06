@@ -8,6 +8,8 @@ Feature: SF
         When I am in SF login page
         When I perform SF login
         When I see the SF home page
+        And I switch to Softphone Iframe
+        And I perform login in adapter
 
         When I set the browser number 2
         When I am in login page
@@ -18,8 +20,6 @@ Feature: SF
 
     Scenario Outline: Check sf basic calls
         When I set the browser number 1
-        And I switch to Softphone Iframe
-        And I perform login in adapter
         When I select <station> for adapter station type
         When I configure adapter station with <station_id> id
         When I proceed to next step
