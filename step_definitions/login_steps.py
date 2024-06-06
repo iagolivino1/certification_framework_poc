@@ -4,7 +4,6 @@ from pytest_bdd import given, then, when
 from step_definitions import home_page_steps, agent_steps, common_steps
 
 LOGIN_PAGE = LoginPage()
-AGENT_CREDENTIALS = {}
 
 
 @given("I am in login page")
@@ -25,8 +24,8 @@ def perform_login():
 @then("I perform logout")
 def perform_logout():
     # get logged agents
-    for agent_ in AGENT_CREDENTIALS:
-        agent_info = AGENT_CREDENTIALS.get(agent_)
+    for agent_ in common_steps.AGENT_CREDENTIALS:
+        agent_info = common_steps.AGENT_CREDENTIALS.get(agent_)
         if not agent_info.get('free') and agent_info.get('free') is not None:
             common_steps.set_current_browser(common.get_driver_by_instance(agent_info.get('driver'), False).get('instance'))
             common.switch_tabs(agent_steps.AGENT_HOME.driver, tab_title='Agent Desktop Plus')
@@ -35,15 +34,18 @@ def perform_logout():
             common.wait_page_element_load(agent_steps.AGENT_HOME.driver, agent_steps.AGENT_HOME.logout_reason_dialog)
             agent_steps.AGENT_HOME.get_confirm_logout_button().click()
             common.wait_page_to_be(agent_steps.AGENT_HOME.driver, 'index.html?loginError=true')
+            common.wait_page_element_load(LOGIN_PAGE.driver, LOGIN_PAGE.user_input)
             if agent_info.get('login_type') == 'emulation':
-                common.switch_tabs(driver_=agent_steps.AGENT_HOME.driver, tab_title='Five9. Inc. :: Applications')
+                tab_title_ = 'Five9 Inc. :: Applications' \
+                    if common.TEST_INFO.get('lab') == 'qa02' else 'Five9. Inc. :: Applications'
+                common.switch_tabs(driver_=agent_steps.AGENT_HOME.driver, tab_title=tab_title_)
                 home_page_steps.HOME_PAGE.get_logout_element().click()
                 common.wait_page_to_be(LOGIN_PAGE.driver, LOGIN_PAGE.url)
             # release agent
             agent_info['free'] = True
             agent_info['driver'] = None
             agent_info['login_type'] = None
-            AGENT_CREDENTIALS[agent_] = agent_info
+            common_steps.AGENT_CREDENTIALS[agent_] = agent_info
 
 
 @when("I see the home page")

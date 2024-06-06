@@ -1,7 +1,7 @@
 import common
 from page_objects.agent_home_page import AgentHomePage
 from pytest_bdd import when, parsers
-from step_definitions import call_interaction_steps, common_steps
+from step_definitions import call_interaction_steps
 
 AGENT_HOME = AgentHomePage()
 
@@ -80,14 +80,18 @@ def dispose_chat():
 @when("I open agent call option")
 def open_call_option():
     AGENT_HOME.get_agent_voice_button().click()
-    common.wait_element_to_be_clickable(AGENT_HOME.driver, call_interaction_steps.CALL_INTERACTIONS.number_input)
+    common.wait_element_to_be_clickable(AGENT_HOME.driver, call_interaction_steps.CALL_INTERACTION_PAGE.number_input)
 
 
 @when(parsers.parse("I set {disposition} disposition"))
 def set_disposition(disposition):
     common.system_wait(5)
     AGENT_HOME.get_set_disposition_button().click()
-    common.wait_element_attribute_contains(AGENT_HOME.driver, AGENT_HOME.set_disposition_button, 'aria-expanded', 'true')
+    # a way to define which element xpath and attribute should be used
+    dropdown_details = [AGENT_HOME.set_disposition_button, 'aria-expanded', 'true']
+    if common.TEST_INFO.get('lab') == 'qa02':
+        dropdown_details = [f"{dropdown_details[0]}/..", 'class', 'open']  # up one more level to get the button parent's
+    common.wait_element_attribute_contains(AGENT_HOME.driver, dropdown_details[0], dropdown_details[1], dropdown_details[2])
     if disposition == 'No Disposition':
         AGENT_HOME.get_no_disposition_option().click()
     elif disposition == 'Do Not Call':
@@ -97,4 +101,4 @@ def set_disposition(disposition):
             if disposition_.text == disposition:
                 disposition_.click()
                 break
-    common.wait_page_element_load(AGENT_HOME.driver, call_interaction_steps.CALL_INTERACTIONS.number_input)
+    common.wait_page_element_load(AGENT_HOME.driver, call_interaction_steps.CALL_INTERACTION_PAGE.number_input)

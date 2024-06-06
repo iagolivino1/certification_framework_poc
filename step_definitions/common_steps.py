@@ -1,3 +1,5 @@
+from selenium.common import NoSuchElementException
+
 import common
 import driver
 from selenium.webdriver.common.by import By
@@ -14,6 +16,7 @@ MODAL_TYPES = {
     'inbound': '(Inbound)',
     'manual': '(Manual)'
 }
+AGENT_CREDENTIALS = {}
 
 
 def reset_variables():
@@ -23,21 +26,34 @@ def reset_variables():
     pass
 
 
-def get_free_agent():
+def update_number_of_tabs(driver_):
+    common.system_wait(3)
+    driver.DRIVERS.get(common.get_driver_by_instance(driver_))['number_of_tabs'] = len(driver_.window_handles)
+
+
+def get_agent_by_driver(driver_):
+    for agent_ in AGENT_CREDENTIALS:
+        if AGENT_CREDENTIALS.get(agent_).get('driver') == driver_:
+            return AGENT_CREDENTIALS.get(agent_)
+
+
+def get_free_agent(login_type=None):
     agent = {}
-    for agent_ in login_steps.AGENT_CREDENTIALS:
-        is_free = login_steps.AGENT_CREDENTIALS.get(agent_).get('free')
+    for agent_ in AGENT_CREDENTIALS:
+        is_free = AGENT_CREDENTIALS.get(agent_).get('free')
         if is_free or is_free is None:
-            agent = login_steps.AGENT_CREDENTIALS.get(agent_)
+            agent = AGENT_CREDENTIALS.get(agent_)
             agent['free'] = False
             agent['driver'] = login_steps.LOGIN_PAGE.driver
-            if 'qalogin' in login_steps.LOGIN_PAGE.url:
-                agent['login_type'] = 'emulation'
-            elif 'qaapp' in login_steps.LOGIN_PAGE.url:
-                agent['login_type'] = 'direct'
-            else:
-                agent['login_type'] = 'unknown'
-            login_steps.AGENT_CREDENTIALS[agent_] = agent
+            if not login_type:
+                if 'qalogin' in login_steps.LOGIN_PAGE.url:
+                    login_type = 'emulation'
+                elif 'qaapp' in login_steps.LOGIN_PAGE.url:
+                    login_type = 'direct'
+                else:
+                    login_type = 'unknown'
+            agent['login_type'] = login_type
+            AGENT_CREDENTIALS[agent_] = agent
             break
     if not agent:
         raise Exception('no free agent available')
@@ -101,24 +117,65 @@ def _skill(skill, action='select'):
 
 
 def select_modal_next_button():
-    next_button_texts = ['Next', 'OK', 'Yes', 'View My Dashboard']
-    text_ = ''
-    for text in next_button_texts:
-        text_ = text
-        try:
-            if COMMON_PAGE.get_modal_submit_button(text).is_displayed():
-                common.system_wait(1)
-                common.wait_element_to_be_clickable(COMMON_PAGE.driver, COMMON_PAGE.modal_submit_button.replace('<text>', text))
-                COMMON_PAGE.get_modal_submit_button(text).click()
-                return True
-        except Exception as e:
-            print(e)
-        common.system_wait(0.5)
-    raise Exception(f"NOT POSSIBLE TO FIND AND CLICK ON {text_} BUTTON!")
+    button_clicked = False
+    for time_ in range(10):  # 20s timeout
+        common.system_wait(2)
+        n_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Next'))
+        o_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'OK'))
+        y_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Yes'))
+        v_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard'))
+        if len(n_buttons) > 0 or len(o_buttons) > 0 or len(y_buttons) > 0 or len(v_buttons) > 0:
+            try:
+                if COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Next')).is_displayed() \
+                        and COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Next')).is_enabled:
+                    COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Next')).click()
+                    button_clicked = True
+                    break
+            except NoSuchElementException:
+                pass
+            try:
+                if COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Next')).is_displayed() \
+                        and COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Next')).is_enabled():
+                    COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Next')).click()
+                    button_clicked = True
+                    break
+            except NoSuchElementException:
+                pass
+            try:
+                if COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'OK')).is_displayed() \
+                        and COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'OK')).is_enabled():
+                    COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'OK')).click()
+                    button_clicked = True
+                    break
+            except NoSuchElementException:
+                pass
+            try:
+                if COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Yes')).is_displayed() \
+                        and COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Yes')).is_enabled():
+                    COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Yes')).click()
+                    button_clicked = True
+                    break
+            except NoSuchElementException:
+                pass
+            try:
+                if COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard')).is_displayed() \
+                        and COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard')).is_enabled():
+                    COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard')).click()
+                    button_clicked = True
+                    break
+            except NoSuchElementException:
+                pass
+    common.system_wait(1)
+    assert button_clicked, "COULD NOT FIND OR CLICK IN NEXT BUTTON"
 
 
 @when("I check the new browser tab opened")
 def check_new_tab():
+    common.system_wait(5)
+    driver_number_of_tabs = driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver)).get('number_of_tabs')
+    current_number_of_tabs = len(COMMON_PAGE.driver.window_handles)
+    assert driver_number_of_tabs < current_number_of_tabs, \
+        f"NEW TAB NOT FOUND. CURRENT NUMBER OF TABS: {current_number_of_tabs} SHOULD BE MORE THAN: {driver_number_of_tabs}"
     driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver))['number_of_tabs'] = len(COMMON_PAGE.driver.window_handles)
     common.switch_tabs(driver_=COMMON_PAGE.driver, tab_id=COMMON_PAGE.driver.window_handles[
         driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver)).get('number_of_tabs')-1])
@@ -128,11 +185,11 @@ def check_new_tab():
 def close_current_browser_tab():
     common.BROWSER_TABS.pop(COMMON_PAGE.driver.current_window_handle)
     COMMON_PAGE.driver.close()
+    common.system_wait(3)
     assert driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver)).get('number_of_tabs') > len(COMMON_PAGE.driver.window_handles), \
         f"CURRENT TAB WAS NOT SUCCESSFULLY CLOSED: {COMMON_PAGE.driver.title}"
     driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver))['number_of_tabs'] = len(COMMON_PAGE.driver.window_handles)
-    common.switch_tabs(COMMON_PAGE.driver, tab_id=COMMON_PAGE.driver.window_handles[len(COMMON_PAGE.driver.window_handles)-1])
-    # log success
+    common.switch_tabs(COMMON_PAGE.driver, tab_id=COMMON_PAGE.driver.window_handles[0])
 
 
 @when(parsers.parse("I proceed to {step} step"))
@@ -148,7 +205,6 @@ def proceed_to_step(step):
 @when(parsers.parse("I {action} the {skill_} skill"))
 @when(parsers.parse("I {action} {skill_} skills"))
 def select_skill(action, skill_):
-    # check if some dialog will appear. in this case, the skills one
     wait_modal_dialog_open('skills', 30)
     if skill_ == 'all':
         all_skills(action)
@@ -165,6 +221,7 @@ def set_current_browser(browser):
         driver_ = driver.DRIVERS.get(str(int(browser) - 1)).get('instance')
     for page in STARTED_PAGES:
         page.driver = driver_
+    common.switch_tabs(driver_=driver_, tab_id=driver_.current_window_handle)
 
 
 @when(parsers.parse("I open a new tab in {url} url"))
@@ -173,3 +230,8 @@ def open_new_tab(url):
         COMMON_PAGE.driver.execute_script("window.open('about:blank');")
     else:
         COMMON_PAGE.driver.get(url)
+
+
+@when(parsers.parse("I switch to tab with {title} title"))
+def switch_to_tab_with_title(title):
+    common.switch_tabs(COMMON_PAGE.driver, tab_title=title)

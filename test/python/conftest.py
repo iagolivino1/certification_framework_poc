@@ -11,8 +11,12 @@ pytest_plugins = [
    "step_definitions.common_steps",
    "step_definitions.home_page_steps",
    "step_definitions.login_steps",
+   "step_definitions.script_steps",
    "step_definitions.station_setup_steps",
-   "step_definitions.call_interaction_steps"
+   "step_definitions.call_interaction_steps",
+   "step_definitions.adapters.adapter_login_steps",
+   "step_definitions.adapters.adapter_steps",
+   "step_definitions.adapters.adapter_worksheet_steps"
 ]
 
 
@@ -59,4 +63,4 @@ def pytest_bdd_after_step(request, feature, scenario, step, step_func, step_func
     # driver.DRIVERS.index(common_steps.COMMON_PAGE.driver)
     tab_info = {'title': common_steps.COMMON_PAGE.driver.title, 'browser_number': int(common.get_driver_by_instance(common_steps.COMMON_PAGE.driver))}
     common.BROWSER_TABS[common_steps.COMMON_PAGE.driver.current_window_handle] = tab_info
-    print(f"step finished: {step}")
+    print(f"step finished!")

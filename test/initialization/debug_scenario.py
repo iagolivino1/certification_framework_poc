@@ -6,6 +6,5 @@ def debug_scenario():
 
     # add the page to STARTED_PAGES variable
     # ex.: common_steps.STARTED_PAGES.append(call_interaction_steps.CALL_INTERACTIONS)
-
     # perform more configuration
     # ...
