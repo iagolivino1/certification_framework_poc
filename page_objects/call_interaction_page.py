@@ -38,6 +38,7 @@ class CallInteractionPage(object):
         self.worksheet_question_answer_text_area = "//textarea[@id='ws_answer_line']"
         self.softphone_iframe = "//iframe[@id='SoftphoneIframe']"
         self.adapter_agent_call_panel = "//div[@id='callPanel']"
+        self.all_tools_toggle = "//div[@id='all-tools-toggle']"
         
 
     def get_number_input(self):
@@ -135,3 +136,6 @@ class CallInteractionPage(object):
     
     def get_adapter_agent_call_panel(self):
         return self.driver.find_element(By.XPATH, self.adapter_agent_call_panel)
+
+    def get_all_tools_toggle(self):
+        return self.driver.find_element(By.XPATH, self.all_tools_toggle)

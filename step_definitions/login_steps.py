@@ -72,8 +72,8 @@ def perform_logout():
             common.wait_element_to_be_clickable(sf_agent_steps.AGENT_HOME.driver, sf_agent_steps.AGENT_HOME.agent_state_button)
             sf_agent_steps.AGENT_HOME.get_agent_state_button().click()
             sf_agent_steps.AGENT_HOME.get_agent_logout_button().click()
-            sf_agent_steps.AGENT_HOME.get_agent_logout_endshift_radio_button().click()
-            sf_agent_steps.AGENT_HOME.get_agent_logout_confirm_button().click()
+            # sf_agent_steps.AGENT_HOME.get_agent_logout_endshift_radio_button().click() - Not available on new domain (Should be created?)
+            # sf_agent_steps.AGENT_HOME.get_agent_logout_confirm_button().click()
             # release agent
             agent_info['free'] = True
             agent_info['driver'] = None

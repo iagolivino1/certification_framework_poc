@@ -33,6 +33,11 @@ def handle_dnc_dialog(action='accept', timeout=5, force=False):
     except TimeoutException:
         print("DNC dialog did not appear!")
 
+def check_all_tools_open():
+    common.wait_element_to_be_clickable(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.all_tools_toggle)
+    if CALL_INTERACTIONS.get_all_tools_toggle().text != "Less Tools":
+        CALL_INTERACTIONS.get_all_tools_toggle().click()
+
 
 def check_script_call_tab():
     CALL_INTERACTION_PAGE.get_script_tab().click()
@@ -51,8 +56,10 @@ def check_script_call_tab():
 
 def check_adapter_script_call_tab():
     main_window_handle = CALL_INTERACTIONS.driver.current_window_handle
-    
-    common.system_wait(5)
+    common.find_and_switch_to_frame(CALL_INTERACTIONS.driver, "SoftphoneIframe")
+
+    check_all_tools_open()
+    # common.system_wait(5)
     common.wait_element_to_be_clickable(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.script_tab)
     common.move_to_and_click_element(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.script_tab)
     common.system_wait(5) #waiting for window to open and load the correct title
@@ -101,6 +108,7 @@ def fill_worksheet_call_tab():
 def fill_adapter_worksheet_call_tab():
     main_window_handle = CALL_INTERACTIONS.driver.current_window_handle
     common.find_and_switch_to_frame(CALL_INTERACTIONS.driver, "SoftphoneIframe")
+    check_all_tools_open()
     common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.worksheet_button)
     common.move_to_and_click_element(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.worksheet_button)
 
@@ -140,7 +148,7 @@ def fill_adapter_worksheet_call_tab():
 
 def handle_call():
     CALL_INTERACTIONS.driver.refresh()
-    common.system_wait(10)
+    common.system_wait(5)
     # common.wait_element_to_not_be_displayed(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.softphone_iframe)
     common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.softphone_iframe)
     common.find_and_switch_to_frame(CALL_INTERACTIONS.driver, "SoftphoneIframe")
