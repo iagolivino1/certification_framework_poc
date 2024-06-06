@@ -7,9 +7,12 @@ class CallInteractionPage(object):
         self.connector_url = None
         self.number_input = "//input[@id='MakeCallFilter-filter-input'] | //input[@id='select_contact_call_number']"
         self.dial_button = "//button[@id='NewCallOptions-action-button'] | //button[@id='dial_btn']" 
+        self.number_input = "//input[@id='MakeCallFilter-filter-input'] | //input[@id='select_contact_call_number']"
+        self.dial_button = "//button[@id='NewCallOptions-action-button'] | //button[@id='dial_btn']" 
         self.dnc_dialog = "//div[@id='okay-cancel-dialog']"
         self.ok_dialog_button = "//button[@id='OkCancelDialog-ok-button']"
         self.cancel_dialog_button = "//button[@id='OkCancelDialog-cancel-button']"
+        self.call_voice_details_header = "//span[@id='AgentVoiceDetailsHeader-infostatetype-label'] | //header[@class='panel-header']"
         self.call_voice_details_header = "//span[@id='AgentVoiceDetailsHeader-infostatetype-label'] | //header[@class='panel-header']"
         self.call_contact_header = "//span[@id='AgentVoiceDetailsHeader-contact-node']"
         self.call_notification_dialog = "//div[@id='call-notification-dialog']"
@@ -17,14 +20,19 @@ class CallInteractionPage(object):
         self.hold_call_button = "//button[@id='CallControlsItem-toggleHold-button'] | //button[@id='holdCall_btn']"
         self.outbound_campaigns_button = "//button[@id='NewCallOptions-campaign-button'] | //button[@id='newCallCampaign_btn']"
         self.outbound_campaigns_options = "//ul[contains(@class, 'campaign-dropdown')]/li| //div[contains(@id, 'campaign_dropdown')]//li"
+        self.hold_call_button = "//button[@id='CallControlsItem-toggleHold-button'] | //button[@id='holdCall_btn']"
+        self.outbound_campaigns_button = "//button[@id='NewCallOptions-campaign-button'] | //button[@id='newCallCampaign_btn']"
+        self.outbound_campaigns_options = "//ul[contains(@class, 'campaign-dropdown')]/li| //div[contains(@id, 'campaign_dropdown')]//li"
         self.caller_contact = "//span[@class='info-contact']"
         self.interaction_tab = "//li[contains(@id, 'context')]/a"
         self.history_tab = "//li[contains(@id, 'history')]/a"
+        self.script_tab = "//li[contains(@id, 'script')]/a | //button[@id='script_btn']"
         self.script_tab = "//li[contains(@id, 'script')]/a | //button[@id='script_btn']"
         self.script_content = "//iframe[@id='custom-script']"
         self.script_title = "//span[contains(text(), 'Inbound Call Arriving')]"
         self.script_caller_data = "//td[@class='grey_box cell']"
         self.connector_tab = "//li[contains(@id, 'connector')]/a"
+        self.worksheet_button = "//button[@id='AgentVoiceDetailsContentsButtons-worksheet-button'] | //button[@id='worksheet_btn']"
         self.worksheet_button = "//button[@id='AgentVoiceDetailsContentsButtons-worksheet-button'] | //button[@id='worksheet_btn']"
         self.worksheet_agent_screen_panel = "//div[@class='agent-screen-worksheet-panel']"
         self.worksheet_expand_button = "//*[@class='worksheet-expand']"
@@ -36,6 +44,10 @@ class CallInteractionPage(object):
         self.worksheet_previous_question_button = "//button[contains(@class, 'ws_prev_btn')] | //button[@id='ws_prev_btn']"
         self.worksheet_finish_question_button = "//button[contains(@class, 'ws_finish_btn btn')] | //button[@id='ws_finish_btn']"
         self.worksheet_question_answer_text_area = "//textarea[@id='ws_answer_line']"
+        self.softphone_iframe = "//iframe[@id='SoftphoneIframe']"
+        self.adapter_agent_call_panel = "//div[@id='callPanel']"
+        self.all_tools_toggle = "//div[@id='all-tools-toggle']"
+        
         self.softphone_iframe = "//iframe[@id='SoftphoneIframe']"
         self.adapter_agent_call_panel = "//div[@id='callPanel']"
         self.all_tools_toggle = "//div[@id='all-tools-toggle']"
@@ -129,7 +141,15 @@ class CallInteractionPage(object):
         return self.driver.find_element(By.XPATH, self.worksheet_finish_question_button)
 
     def get_worksheet_question_answer_text_area(self):
-        return self.driver.find_element(By.XPATH, self.worksheet_question_answer_text_area)
+    
+    def get_iframe_softphone(self):
+        return self.driver.find_element(By.XPATH, self.softphone_iframe)
+    
+    def get_adapter_agent_call_panel(self):
+        return self.driver.find_element(By.XPATH, self.adapter_agent_call_panel)
+
+    def get_all_tools_toggle(self):
+        return self.driver.find_element(By.XPATH, self.all_tools_toggle)
     
     def get_iframe_softphone(self):
         return self.driver.find_element(By.XPATH, self.softphone_iframe)

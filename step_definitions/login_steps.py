@@ -37,6 +37,14 @@ def perform_adapter_login():
     LOGIN_PAGE.get_login_button().click()
     check_force_login() #Used on SF - should not break other tests
 
+@when("I perform login in adapter")
+def perform_adapter_login():
+    agent = common_steps.get_free_agent(login_type='adapter')
+    LOGIN_PAGE.get_user_input().send_keys(agent.get('user'))
+    LOGIN_PAGE.get_password_input().send_keys(agent.get('pass'))
+    LOGIN_PAGE.get_login_button().click()
+    check_force_login() #Used on SF - should not break other tests
+
 
 @then("I perform logout")
 def perform_logout():

@@ -252,6 +252,37 @@ def crosscheck_worksheet_answers():
     CALL_INTERACTION_PAGE.driver.switch_to.window(main_window_handle)
     # log result
 
+@when("I crosscheck the call adapter worksheet tab answers")
+def crosscheck_worksheet_answers():
+    main_window_handle = CALL_INTERACTIONS.driver.current_window_handle
+    common.find_and_switch_to_frame(CALL_INTERACTIONS.driver, "SoftphoneIframe")
+    common.move_to_and_click_element(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.worksheet_button)
+    common.system_wait(1) #Necessary for now - waiting for window to reopen
+
+    for i in range(0,5):
+        worksheet_window_opened = common.check_window_is_open(CALL_INTERACTIONS.driver,"five9 adapter - worksheet")
+        if worksheet_window_opened: break
+        common.system_wait(1)
+
+    assert worksheet_window_opened, "Worksheet window was not opened"
+
+    common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.worksheet_next_question_button)
+    has_next_question = CALL_INTERACTIONS.get_worksheet_next_question_button().is_enabled()
+    while has_next_question:
+        current_question_ = CALL_INTERACTIONS.get_worksheet_current_question().text
+        current_answer_ = CALL_INTERACTIONS.get_worksheet_question_answer_text_area().text
+        assert current_answer_ == WORKSHEET_QUESTIONS.get(current_question_), "ANSWER WAS NOT SAVED!"       
+        has_next_question = CALL_INTERACTIONS.get_worksheet_next_question_button().is_enabled()
+        if has_next_question:
+            CALL_INTERACTIONS.get_worksheet_next_question_button().click()
+            for i in range(0,10):
+                if CALL_INTERACTIONS.get_worksheet_current_question().text != current_question_: break 
+                common.system_wait(0.5)
+
+    CALL_INTERACTIONS.get_worksheet_finish_question_button().click()
+    CALL_INTERACTIONS.driver.switch_to.window(main_window_handle)
+    # log result
+
 
 @when("I receive an inbound call")
 def receive_inbound_call():
