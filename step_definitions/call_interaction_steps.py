@@ -34,9 +34,9 @@ def handle_dnc_dialog(action='accept', timeout=5, force=False):
         print("DNC dialog did not appear!")
 
 def check_all_tools_open():
-    common.wait_element_to_be_clickable(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.all_tools_toggle)
-    if CALL_INTERACTIONS.get_all_tools_toggle().text != "Less Tools":
-        CALL_INTERACTIONS.get_all_tools_toggle().click()
+    common.wait_element_to_be_clickable(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.all_tools_toggle)
+    if CALL_INTERACTION_PAGE.get_all_tools_toggle().text != "Less Tools":
+        CALL_INTERACTION_PAGE.get_all_tools_toggle().click()
 
 
 def check_script_call_tab():
@@ -55,22 +55,22 @@ def check_script_call_tab():
     common.switch_tabs(driver_=CALL_INTERACTION_PAGE.driver, tab_id=CALL_INTERACTION_PAGE.driver.current_window_handle)
 
 def check_adapter_script_call_tab():
-    main_window_handle = CALL_INTERACTIONS.driver.current_window_handle
-    common.find_and_switch_to_frame(CALL_INTERACTIONS.driver, "SoftphoneIframe")
+    main_window_handle = CALL_INTERACTION_PAGE.driver.current_window_handle
+    common.find_and_switch_to_frame(CALL_INTERACTION_PAGE.driver, "SoftphoneIframe")
 
     check_all_tools_open()
     # common.system_wait(5)
-    common.wait_element_to_be_clickable(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.script_tab)
-    common.move_to_and_click_element(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.script_tab)
+    common.wait_element_to_be_clickable(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.script_tab)
+    common.move_to_and_click_element(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.script_tab)
     common.system_wait(5) #waiting for window to open and load the correct title
 
     # Checking all the open windows for the SCRIPT one
     for i in range(0,5):
-        script_window_opened = common.check_window_is_open(CALL_INTERACTIONS.driver, "five9 adapter - script")
+        script_window_opened = common.check_window_is_open(CALL_INTERACTION_PAGE.driver, "five9 adapter - script")
         if script_window_opened: break
         common.system_wait(1)
     
-    CALL_INTERACTIONS.driver.switch_to.window(main_window_handle)
+    CALL_INTERACTION_PAGE.driver.switch_to.window(main_window_handle)
     assert script_window_opened, "Script window was not opened"
     
 
@@ -106,25 +106,25 @@ def fill_worksheet_call_tab():
     CALL_INTERACTION_PAGE.get_worksheet_finish_question_button().click()
 
 def fill_adapter_worksheet_call_tab():
-    main_window_handle = CALL_INTERACTIONS.driver.current_window_handle
-    common.find_and_switch_to_frame(CALL_INTERACTIONS.driver, "SoftphoneIframe")
+    main_window_handle = CALL_INTERACTION_PAGE.driver.current_window_handle
+    common.find_and_switch_to_frame(CALL_INTERACTION_PAGE.driver, "SoftphoneIframe")
     check_all_tools_open()
-    common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.worksheet_button)
-    common.move_to_and_click_element(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.worksheet_button)
+    common.wait_page_element_load(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.worksheet_button)
+    common.move_to_and_click_element(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.worksheet_button)
 
     #Wait for worksheet window to open
     #common.system_wait(5)
     for i in range(0,5):
-        worksheet_window_opened = common.check_window_is_open(CALL_INTERACTIONS.driver,"five9 adapter - worksheet")
+        worksheet_window_opened = common.check_window_is_open(CALL_INTERACTION_PAGE.driver,"five9 adapter - worksheet")
         if worksheet_window_opened: break
         common.system_wait(1)
 
     assert worksheet_window_opened, "Worksheet window was not opened"
 
     if worksheet_window_opened:
-        common.wait_element_to_be_clickable(CALL_INTERACTIONS.driver,CALL_INTERACTIONS.worksheet_finish_question_button)
+        common.wait_element_to_be_clickable(CALL_INTERACTION_PAGE.driver,CALL_INTERACTION_PAGE.worksheet_finish_question_button)
         # set questions
-        for question_ in CALL_INTERACTIONS.get_worksheet_questions():
+        for question_ in CALL_INTERACTION_PAGE.get_worksheet_questions():
             WORKSHEET_QUESTIONS[question_.text] = ''
 
         # answer questions
@@ -136,7 +136,7 @@ def fill_adapter_worksheet_call_tab():
             WORKSHEET_QUESTIONS[current_question_] = answer_
             has_next_question = CALL_INTERACTION_PAGE.get_worksheet_next_question_button().is_enabled()
             if has_next_question:
-                CALL_INTERACTIONS.get_worksheet_next_question_button().click()
+                CALL_INTERACTION_PAGE.get_worksheet_next_question_button().click()
                 for i in range(0,10):
                     if CALL_INTERACTION_PAGE.get_worksheet_current_question().text != current_question_: break 
                     common.system_wait(0.5)
@@ -147,11 +147,11 @@ def fill_adapter_worksheet_call_tab():
 
 
 def handle_call():
-    CALL_INTERACTIONS.driver.refresh()
+    CALL_INTERACTION_PAGE.driver.refresh()
     common.system_wait(5)
     # common.wait_element_to_not_be_displayed(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.softphone_iframe)
-    common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.softphone_iframe)
-    common.find_and_switch_to_frame(CALL_INTERACTIONS.driver, "SoftphoneIframe")
+    common.wait_page_element_load(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.softphone_iframe)
+    common.find_and_switch_to_frame(CALL_INTERACTION_PAGE.driver, "SoftphoneIframe")
 
 @when(parsers.parse("I select {campaign} outbound campaign"))
 def select_outbound_campaign(campaign):
@@ -186,9 +186,9 @@ def call_number(number):
 
 @when(parsers.parse("I call {number} from adapter"))
 def call_number_from_adapter(number):
-    CALL_INTERACTIONS.get_number_input().clear()
-    CALL_INTERACTIONS.get_number_input().send_keys(number)
-    CALL_INTERACTIONS.get_dial_button().click()
+    CALL_INTERACTION_PAGE.get_number_input().clear()
+    CALL_INTERACTION_PAGE.get_number_input().send_keys(number)
+    CALL_INTERACTION_PAGE.get_dial_button().click()
     handle_call()
     
     # log success
@@ -223,33 +223,33 @@ def crosscheck_worksheet_answers():
 
 @when("I crosscheck the call adapter worksheet tab answers")
 def crosscheck_worksheet_answers():
-    main_window_handle = CALL_INTERACTIONS.driver.current_window_handle
-    common.find_and_switch_to_frame(CALL_INTERACTIONS.driver, "SoftphoneIframe")
-    common.move_to_and_click_element(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.worksheet_button)
+    main_window_handle = CALL_INTERACTION_PAGE.driver.current_window_handle
+    common.find_and_switch_to_frame(CALL_INTERACTION_PAGE.driver, "SoftphoneIframe")
+    common.move_to_and_click_element(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.worksheet_button)
     common.system_wait(1) #Necessary for now - waiting for window to reopen
 
     for i in range(0,5):
-        worksheet_window_opened = common.check_window_is_open(CALL_INTERACTIONS.driver,"five9 adapter - worksheet")
+        worksheet_window_opened = common.check_window_is_open(CALL_INTERACTION_PAGE.driver,"five9 adapter - worksheet")
         if worksheet_window_opened: break
         common.system_wait(1)
 
     assert worksheet_window_opened, "Worksheet window was not opened"
 
-    common.wait_page_element_load(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.worksheet_next_question_button)
-    has_next_question = CALL_INTERACTIONS.get_worksheet_next_question_button().is_enabled()
+    common.wait_page_element_load(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.worksheet_next_question_button)
+    has_next_question = CALL_INTERACTION_PAGE.get_worksheet_next_question_button().is_enabled()
     while has_next_question:
-        current_question_ = CALL_INTERACTIONS.get_worksheet_current_question().text
-        current_answer_ = CALL_INTERACTIONS.get_worksheet_question_answer_text_area().text
+        current_question_ = CALL_INTERACTION_PAGE.get_worksheet_current_question().text
+        current_answer_ = CALL_INTERACTION_PAGE.get_worksheet_question_answer_text_area().text
         assert current_answer_ == WORKSHEET_QUESTIONS.get(current_question_), "ANSWER WAS NOT SAVED!"       
-        has_next_question = CALL_INTERACTIONS.get_worksheet_next_question_button().is_enabled()
+        has_next_question = CALL_INTERACTION_PAGE.get_worksheet_next_question_button().is_enabled()
         if has_next_question:
-            CALL_INTERACTIONS.get_worksheet_next_question_button().click()
+            CALL_INTERACTION_PAGE.get_worksheet_next_question_button().click()
             for i in range(0,10):
-                if CALL_INTERACTIONS.get_worksheet_current_question().text != current_question_: break 
+                if CALL_INTERACTION_PAGE.get_worksheet_current_question().text != current_question_: break 
                 common.system_wait(0.5)
 
-    CALL_INTERACTIONS.get_worksheet_finish_question_button().click()
-    CALL_INTERACTIONS.driver.switch_to.window(main_window_handle)
+    CALL_INTERACTION_PAGE.get_worksheet_finish_question_button().click()
+    CALL_INTERACTION_PAGE.driver.switch_to.window(main_window_handle)
     # log result
 
 
@@ -264,6 +264,6 @@ def receive_inbound_call():
 @when("I receive an inbound call on adapter")
 def receive_inbound_call():
     handle_call()
-    common.wait_element_to_be_clickable(CALL_INTERACTIONS.driver,CALL_INTERACTIONS.hold_call_button)
-    assert 'Inbound Call' in CALL_INTERACTIONS.get_call_voice_details_header().text, "LIVE CALL WAS NOT STARTED"
+    common.wait_element_to_be_clickable(CALL_INTERACTION_PAGE.driver,CALL_INTERACTION_PAGE.hold_call_button)
+    assert 'Inbound Call' in CALL_INTERACTION_PAGE.get_call_voice_details_header().text, "LIVE CALL WAS NOT STARTED"
 

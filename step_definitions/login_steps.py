@@ -78,7 +78,7 @@ def perform_logout():
             agent_info['free'] = True
             agent_info['driver'] = None
             agent_info['login_type'] = None
-            AGENT_CREDENTIALS[agent_] = agent_info
+            common_steps.AGENT_CREDENTIALS[agent_] = agent_info
 
 
 @when("I see the home page")
