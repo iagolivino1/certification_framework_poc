@@ -28,6 +28,7 @@ Feature: ADT+ Adapter
     When I select make a call option
     When I fill <inbound_number2> in call input number
     When I select cert_out campaign in adapter
+    ##When I select dial number button
     When I select dial number button
     When I select adapter script button
     When I check the call script window

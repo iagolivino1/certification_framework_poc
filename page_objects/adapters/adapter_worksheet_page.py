@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 
 
-class ADTWorksheetPage(object):
+class AdapterWorksheetPage(object):
     def __init__(self, driver=None):
         self.driver = driver
         self.worksheet_questions = "//div[@id='ws_ql_wrapper']//li"

@@ -2,11 +2,11 @@ from pytest_bdd import when
 from selenium.webdriver import Keys
 
 import common
-from page_objects.adapters.adapter_login_page import ADTLoginPage
+from page_objects.adapters.adapter_login_page import AdapterLoginPage
 from step_definitions import common_steps
 from step_definitions.adapters import adapter_steps
 
-ADAPTER_LOGIN_PAGE = ADTLoginPage()
+ADAPTER_LOGIN_PAGE = AdapterLoginPage()
 PLATFORM_HOTKEYS = {
     'windows': [Keys.CONTROL, 'ctrl'],
     'mac': [Keys.COMMAND, 'command'],

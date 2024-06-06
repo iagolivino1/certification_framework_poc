@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 
 
-class ADTLoginPage(object):
+class AdapterLoginPage(object):
     def __init__(self, driver=None):
         self.driver = driver
         self.url = "https://qaapp01d.five9lab.com/clients/integrations/adt.main.html"

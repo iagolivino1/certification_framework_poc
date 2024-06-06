@@ -3,15 +3,15 @@ from selenium.common import NoSuchElementException, TimeoutException, StaleEleme
 from selenium.webdriver import Keys
 
 import common
-from page_objects.adapters.adapter_page import ADTAdapterPage
+from page_objects.adapters.adapter_page import AdapterPage
 from step_definitions import common_steps
 
-ADAPTER_PAGE = ADTAdapterPage()
+ADAPTER_PAGE = AdapterPage()
 NUMBER_OF_SELECTED_SKILLS = 0
 CALL_NUMBER = ''
 
 
-def handle_adt_dnc_number():
+def handle_adapter_dnc_number():
     try:
         common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.do_not_call_dial_button)
         ADAPTER_PAGE.get_do_not_call_dial_button().click()
@@ -169,7 +169,7 @@ def select_adt_campaign(campaign):
 def select_dial_number_button():
     common.wait_element_to_be_clickable(ADAPTER_PAGE.driver, ADAPTER_PAGE.dial_button)
     ADAPTER_PAGE.get_dial_button().click()
-    handle_adt_dnc_number()
+    handle_adapter_dnc_number()
     common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.agent_call_panel)
 
 

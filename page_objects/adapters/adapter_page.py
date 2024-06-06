@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 
 
-class ADTAdapterPage(object):
+class AdapterPage(object):
     def __init__(self, driver=None):
         self.driver = driver
         self.url = ''

@@ -189,7 +189,7 @@ def close_current_browser_tab():
     assert driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver)).get('number_of_tabs') > len(COMMON_PAGE.driver.window_handles), \
         f"CURRENT TAB WAS NOT SUCCESSFULLY CLOSED: {COMMON_PAGE.driver.title}"
     driver.DRIVERS.get(common.get_driver_by_instance(COMMON_PAGE.driver))['number_of_tabs'] = len(COMMON_PAGE.driver.window_handles)
-    common.switch_tabs(COMMON_PAGE.driver, tab_id=COMMON_PAGE.driver.window_handles[len(COMMON_PAGE.driver.window_handles)-1])
+    common.switch_tabs(COMMON_PAGE.driver, tab_id=COMMON_PAGE.driver.window_handles[0])
 
 
 @when(parsers.parse("I proceed to {step} step"))
