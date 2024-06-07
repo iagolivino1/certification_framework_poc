@@ -1,7 +1,7 @@
 import common
 from page_objects.agent_home_page import AgentHomePage
 from pytest_bdd import when, parsers
-from step_definitions import call_interaction_steps
+from step_definitions import call_interaction_steps, common_steps, chat_interaction_steps
 
 AGENT_HOME = AgentHomePage()
 
@@ -23,6 +23,7 @@ def check_agent_left_menu():
 def set_agent_ready_for(options):
     common.switch_tabs(AGENT_HOME.driver, tab_title='Agent Desktop Plus')
     options = options.split(',')
+    selected_channels = []
     AGENT_HOME.get_agent_status_button().click()
     AGENT_HOME.get_ready_for_option().click()
     for option in options:
@@ -40,47 +41,27 @@ def set_agent_ready_for(options):
             checkbox_path = AGENT_HOME.voicemail_channel_checkbox
         else:
             raise NotImplementedError(f"NOT VALID OR NOT IMPLEMENTED OPTION: {option}")
+        selected_channels.append(option)
 
         if "checked" not in checkbox_status.get_attribute("class"):
             checkbox.click()
             common.wait_element_class_contains(AGENT_HOME.driver, checkbox_path, "checked")
     AGENT_HOME.get_confirm_channel_button().click()
     common.wait_element_class_contains(AGENT_HOME.driver, AGENT_HOME.agent_status_button, "state-ready")
-
-
-@when("Agent check and accept the text interaction")
-def accept_text_interaction(start_message):
-    AGENT_HOME.get_agent_chat_button().click()
-    common.element_recursive_click(AGENT_HOME.driver, AGENT_HOME.refresh_chats_button, 15)  # 7.5s
-    common.wait_element_to_be_more_than(AGENT_HOME.driver, AGENT_HOME.newest_chat_interaction, 0)
-    AGENT_HOME.get_unselected_lock_chat_button().click()
-    AGENT_HOME.get_newest_chat_interaction().click()  # select the newest if more than 1 is displayed
-    common.wait_page_element_load(AGENT_HOME.driver, AGENT_HOME.conversation_content)
-    common.assert_condition(start_message in AGENT_HOME.get_conversation_content().text,
-                            "CUSTOMER MESSAGE IS NOT BEING SENT TO AGENT")
-
-
-@when("Agent answer the message")
-def reply_chat(reply_message):
-    common.system_wait(2)
-    AGENT_HOME.driver.switch_to.window(AGENT_HOME.driver.current_window_handle)
-    AGENT_HOME.get_reply_message_textarea().send_keys(reply_message)
-    AGENT_HOME.get_send_message_button().click()
-
-
-@when("Agent dispose the chat interaction")
-def dispose_chat():
-    AGENT_HOME.driver.switch_to.window(AGENT_HOME.driver.current_window_handle)
-    AGENT_HOME.get_set_disposition_button().click()
-    common.wait_page_element_load(AGENT_HOME.driver, AGENT_HOME.no_disposition_option)
-    AGENT_HOME.get_no_disposition_option().click()
-    common.wait_elements_to_be_less_than(AGENT_HOME.driver, AGENT_HOME.newest_chat_interaction, 1)
+    common_steps.get_agent_by_driver(AGENT_HOME.driver)['ready_channels'] = selected_channels
 
 
 @when("I open agent call option")
 def open_call_option():
     AGENT_HOME.get_agent_voice_button().click()
     common.wait_element_to_be_clickable(AGENT_HOME.driver, call_interaction_steps.CALL_INTERACTION_PAGE.number_input)
+
+
+@when("I open agent chat option")
+def open_call_option():
+    AGENT_HOME.get_agent_chat_button().click()
+    common.wait_element_to_be_clickable(AGENT_HOME.driver, chat_interaction_steps.CHAT_INTERACTION_PAGE.refresh_chats_button)
+    chat_interaction_steps.CURRENT_NUMBER_OF_CHAT_INTERACTIONS = len(chat_interaction_steps.CHAT_INTERACTION_PAGE.get_all_chat_interactions())
 
 
 @when(parsers.parse("I set {disposition} disposition"))

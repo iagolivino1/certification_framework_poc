@@ -14,6 +14,10 @@ def set_base_pages(instances=1):
         print(f'could not find "credentials" section in {driver.CONFIG_FILE}.\n{e}\nusing the default...')
         common_steps.AGENT_CREDENTIALS = get_config_file_section('config.yml', 'credentials')
 
+    # set ready for field
+    for agent in common_steps.AGENT_CREDENTIALS:
+        common_steps.AGENT_CREDENTIALS.get(agent)['ready_channels'] = []
+
     # set login url if any
     login_url = get_config_file_section(lab_config, 'configuration').get('login_url')
     if login_url:

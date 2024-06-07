@@ -1,7 +1,6 @@
-from selenium.common import NoSuchElementException
-
 import common
 import driver
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from page_objects.common_page import CommonPage
 from pytest_bdd import given, when, parsers
@@ -17,12 +16,15 @@ MODAL_TYPES = {
     'manual': '(Manual)'
 }
 AGENT_CREDENTIALS = {}
+TEARDOWN = False
 
 
 def reset_variables():
     """
     reset all variables to avoid missmatch use when run more than 1 test at once
     """
+    global TEARDOWN
+    TEARDOWN = True
     pass
 
 
@@ -35,6 +37,31 @@ def get_agent_by_driver(driver_):
     for agent_ in AGENT_CREDENTIALS:
         if AGENT_CREDENTIALS.get(agent_).get('driver') == driver_:
             return AGENT_CREDENTIALS.get(agent_)
+
+
+def get_agent_by_attributes(user=None, station_id=None, inbound_camp=None, outbound_camp=None, chat_camp=None, ready_for=None):
+    agent = {}
+    for agent_ in AGENT_CREDENTIALS:
+        tmp_agent = AGENT_CREDENTIALS.get(agent_)
+        try:
+            if user:
+                assert tmp_agent.get('user') == user
+            if station_id:
+                assert tmp_agent.get('station').get('station_id') == station_id
+            if inbound_camp:
+                assert tmp_agent.get('inbound_camp') == inbound_camp
+            if outbound_camp:
+                assert tmp_agent.get('outbound_camp') == outbound_camp
+            if chat_camp:
+                assert tmp_agent.get('chat_camp') == chat_camp
+            if ready_for:
+                assert ready_for in tmp_agent.get('ready_channels')
+            agent = tmp_agent
+        except AssertionError:
+            continue
+        except AttributeError:
+            continue
+    return agent
 
 
 def get_free_agent(login_type=None):
