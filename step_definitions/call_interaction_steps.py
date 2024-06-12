@@ -86,15 +86,6 @@ def fill_worksheet_call_tab():
             CALL_INTERACTION_PAGE.get_worksheet_next_question_button().click()
     CALL_INTERACTION_PAGE.get_worksheet_finish_question_button().click()
 
-
-
-# def handle_call():
-#     CALL_INTERACTION_PAGE.driver.refresh()
-#     common.system_wait(5)
-#     # common.wait_element_to_not_be_displayed(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.softphone_iframe)
-#     common.wait_page_element_load(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.softphone_iframe)
-#     common.find_and_switch_to_frame(CALL_INTERACTION_PAGE.driver, "SoftphoneIframe")
-
 @when(parsers.parse("I select {campaign} outbound campaign"))
 def select_outbound_campaign(campaign):
     CALL_INTERACTION_PAGE.get_outbound_campaigns_button().click()

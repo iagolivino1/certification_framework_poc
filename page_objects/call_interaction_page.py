@@ -34,7 +34,7 @@ class CallInteractionPage(object):
         self.worksheet_current_question = "//div[@class='worksheetQuestionNumber']"
         self.worksheet_next_question_button = "//button[contains(@class, 'ws_next_btn')]"
         self.worksheet_previous_question_button = "//button[contains(@class, 'ws_prev_btn')]"
-        self.worksheet_finish_question_button = "//button[contains(@class, 'ws_finish_btn btn')]"
+        self.worksheet_finish_question_button = "//button[contains(@class, 'ws_finish_btnbtn')] | //button[@id='ws_finish_btn']"
         self.worksheet_question_answer_text_area = "//textarea[@id='ws_answer_line']"
         self.softphone_iframe = "//iframe[@id='SoftphoneIframe']"
         self.adapter_agent_call_panel = "//div[@id='callPanel']"
