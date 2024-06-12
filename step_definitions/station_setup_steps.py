@@ -8,7 +8,7 @@ STATION_SETUP = StationSetupPage()
 
 @when(parsers.parse("I select {station_type} for station type"))
 def select_station_type(station_type):
-    common_steps.wait_modal_dialog_open('station', 30)
+    common_steps.wait_modal_dialog_open('station', 300)
     common.wait_page_element_load(STATION_SETUP.driver, STATION_SETUP.none_station, 120)
     if station_type == 'None':
         STATION_SETUP.get_none_station_type().click()

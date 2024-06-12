@@ -103,6 +103,7 @@ def call_number(number):
     CALL_INTERACTION_PAGE.get_number_input().send_keys(number)
     CALL_INTERACTION_PAGE.get_number_input().send_keys(Keys.ESCAPE)
     common.wait_element_to_be_clickable(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.dial_button)
+    common.system_wait(1)
     CALL_INTERACTION_PAGE.get_dial_button().click()
     handle_dnc_dialog()
     common_steps.wait_modal_dialog_open('manual', 15)

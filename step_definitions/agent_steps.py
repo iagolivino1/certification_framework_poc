@@ -1,3 +1,5 @@
+from selenium.webdriver.common.by import By
+
 import common
 from page_objects.agent_home_page import AgentHomePage
 from pytest_bdd import when, parsers
@@ -27,23 +29,23 @@ def set_agent_ready_for(options):
     AGENT_HOME.get_ready_for_option().click()
     for option in options:
         if option.lower() == 'text':
-            checkbox = AGENT_HOME.get_text_channel_checkbox()
-            checkbox_status = AGENT_HOME.get_text_channel_checkbox_status()
+            # checkbox = AGENT_HOME.get_text_channel_checkbox()
+            checkbox_status = AGENT_HOME.text_channel_checkbox_status
             checkbox_path = AGENT_HOME.text_channel_checkbox
         elif option.lower() == 'voice':
-            checkbox = AGENT_HOME.get_voice_channel_checkbox()
-            checkbox_status = AGENT_HOME.get_voice_channel_checkbox_status()
+            # checkbox = AGENT_HOME.get_voice_channel_checkbox()
+            checkbox_status = AGENT_HOME.voice_channel_checkbox_status
             checkbox_path = AGENT_HOME.voice_channel_checkbox
         elif option.lower() == 'vm':
-            checkbox = AGENT_HOME.get_voicemail_channel_checkbox()
-            checkbox_status = AGENT_HOME.get_voicemail_channel_checkbox_status()
+            # checkbox = AGENT_HOME.get_voicemail_channel_checkbox()
+            checkbox_status = AGENT_HOME.voicemail_channel_checkbox_status
             checkbox_path = AGENT_HOME.voicemail_channel_checkbox
         else:
             raise NotImplementedError(f"NOT VALID OR NOT IMPLEMENTED OPTION: {option}")
 
-        if "checked" not in checkbox_status.get_attribute("class"):
-            checkbox.click()
-            common.wait_element_class_contains(AGENT_HOME.driver, checkbox_path, "checked")
+        if "checked" not in AGENT_HOME.driver.find_element(By.XPATH, checkbox_status).get_attribute("class"):
+            common.click_element(driver_=AGENT_HOME.driver, element_xpath=checkbox_path)
+            common.wait_element_class_contains(AGENT_HOME.driver, checkbox_status, "checked")
     AGENT_HOME.get_confirm_channel_button().click()
     common.wait_element_class_contains(AGENT_HOME.driver, AGENT_HOME.agent_status_button, "state-ready")
 

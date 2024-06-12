@@ -5,16 +5,16 @@ Feature: DEBUG
 
   Background:
     Given I set the browser number 1
-    When I am in login page
+    When I am in direct login page
     When I perform login
 
   Scenario: Debug scenario
-    When I select WebRTC for station type
-    When I configure station with 870000000001202 id
+    When I select Softphone for station type
+    When I configure station with 660200000001164 id
     When I proceed to next step
     When I select all skills
     When I proceed to next step
     When I see the agent home page
-    When I call +18552519368
-    When I set No Disposition disposition
+    When I change agent state to ready for voice
+
     Then I perform logout
