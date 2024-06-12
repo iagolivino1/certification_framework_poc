@@ -6,6 +6,7 @@ class SFLoginPage(object):
         self.user_input = "//input[@id='username']"
         self.pass_input = "//input[@id='password']"
         self.login_button = "//input[@id='Login']"
+        self.logo_img = "//img[@id='phHeaderLogoImage']"
         self.url = 'https://login.salesforce.com/'
 
     def open_page(self):
@@ -22,3 +23,6 @@ class SFLoginPage(object):
 
     def get_login_button(self):
         return self.driver.find_element(By.XPATH, self.login_button)
+    
+    def get_logo_img(self):
+        return self.driver.find_element(By.XPATH, self.logo_img)

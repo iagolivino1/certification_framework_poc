@@ -100,17 +100,6 @@ def all_skills(action='select'):
             COMMON_PAGE.get_all_skills_button().click()
         assert COMMON_PAGE.get_all_skills_button().text.strip() == 'Select All'
 
-def all_skills_sf(action='select'):
-    common.wait_page_element_load(COMMON_PAGE.driver,COMMON_PAGE.modal_dialog_skills_sf.replace('<title>',
-                                                                                     'Select Your Skills'))
-    if action == 'select' and not COMMON_PAGE.get_all_skills_sf_checkbox().is_selected():
-        COMMON_PAGE.get_all_skills_sf_label().click()
-    elif action == 'select' and COMMON_PAGE.get_all_skills_sf_checkbox().is_selected():
-        pass
-    elif not action == 'select' and not COMMON_PAGE.get_all_skills_sf_checkbox().is_selected():
-        pass
-    else:
-        COMMON_PAGE.get_all_skills_button().click()
 
 def _skill(skill, action='select'):
     validation_ = 'true'
@@ -135,7 +124,8 @@ def select_modal_next_button():
         o_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'OK'))
         y_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Yes'))
         v_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard'))
-        if len(n_buttons) > 0 or len(o_buttons) > 0 or len(y_buttons) > 0 or len(v_buttons) > 0:
+        c_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Confirm'))
+        if len(n_buttons) > 0 or len(o_buttons) > 0 or len(y_buttons) > 0 or len(v_buttons) > 0 or len(c_buttons) > 0:
             try:
                 if COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Next')).is_displayed() \
                         and COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Next')).is_enabled:
@@ -172,6 +162,14 @@ def select_modal_next_button():
                 if COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard')).is_displayed() \
                         and COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard')).is_enabled():
                     COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard')).click()
+                    button_clicked = True
+                    break
+            except NoSuchElementException:
+                pass
+            try:
+                if COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Confirm')).is_displayed() \
+                        and COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Confirm')).is_enabled:
+                    COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Confirm')).click()
                     button_clicked = True
                     break
             except NoSuchElementException:
@@ -219,15 +217,6 @@ def select_skill(action, skill_):
     wait_modal_dialog_open('skills', 30)
     if skill_ == 'all':
         all_skills(action)
-    else:
-        _skill(skill_, action)
-
-
-@when(parsers.parse("I {action} the {skill_} skill on SF"))
-@when(parsers.parse("I {action} {skill_} skills on SF"))
-def select_skill(action, skill_):
-    if skill_ == 'all':
-        all_skills_sf(action)
     else:
         _skill(skill_, action)
 

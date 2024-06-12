@@ -8,7 +8,7 @@ class AgentHomePage(object):
         self.ready_for_current_option = "//a[@id='ReadyCodesLayout-readycurrent-label']"
         self.ready_for_option = "//a[@id='ReadyCodesLayout-readyfor-label']"
         self.agent_home_button = "//a[@id='AgentLeftNavbarItem-home-button']"
-        self.agent_voice_button = "//a[@id='AgentLeftNavbarItem-voice-button'] | //button[@id='newCall-btn']"
+        self.agent_voice_button = "//a[@id='AgentLeftNavbarItem-voice-button']"
         self.agent_voicemail_button = "//a[@id='AgentLeftNavbarItem-voicemail-button']"
         self.agent_chat_button = "//a[@id='AgentLeftNavbarItem-chat-button']"
         self.agent_email_button = "//a[@id='AgentLeftNavbarItem-email-button']"

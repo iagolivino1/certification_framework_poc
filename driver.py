@@ -60,11 +60,23 @@ class Driver(object):
         except NoSectionError:
             browser_extensions = {}
 
+        try:
+            experimental_flags = common.get_config_file_section(CONFIG_FILE, f'{browser.split("-")[0]}_experimental')
+        except NoSectionError:
+            experimental_flags = {}
+
+
         for browser_flag in browser_flags.values():
             options.add_argument(browser_flag)
 
         for browser_extension in browser_extensions.values():
             options.add_extension(os.path.dirname(os.path.realpath(__file__)) + os.sep + f'extensions/{browser_extension}')
+
+        experiments = {"enabled_labs_experiments":[]}
+        for experimental_flag in experimental_flags:
+            experiments.get("enabled_labs_experiments").append(f"{experimental_flag}@{experimental_flags.get(experimental_flag)}")
+            
+        options.add_experimental_option("localState", {"browser":experiments})
 
         func = getattr(self, "_"+browser.replace("-", "_"))
         return func(options)
