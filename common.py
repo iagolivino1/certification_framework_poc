@@ -87,7 +87,9 @@ def switch_to_frame(driver_, frame):
     driver_.switch_to.frame(frame)
 
 
-def click_element(driver_, element):
+def click_element(driver_, element=None, element_xpath=None):
+    if element_xpath:
+        element = driver_.find_element(By.XPATH, element_xpath)
     driver_.execute_script("arguments[0].click();", element)
 
 

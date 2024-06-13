@@ -1,4 +1,4 @@
-from pytest_bdd import when
+from pytest_bdd import when, then
 from selenium.webdriver import Keys
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
@@ -40,6 +40,7 @@ def see_adt_login_page():
 
 
 @when("I perform logout in adapter")
+@then("I perform logout in adapter")
 def adapter_logout():
     # get logged agents
     for agent_ in common_steps.AGENT_CREDENTIALS:

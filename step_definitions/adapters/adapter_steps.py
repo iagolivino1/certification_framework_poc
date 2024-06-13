@@ -82,6 +82,7 @@ def confirm_selection():
     if common_steps.get_agent_by_driver(ADAPTER_PAGE.driver).get('station') != 'None':
         common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.content_header)
         common.wait_element_attribute_contains(ADAPTER_PAGE.driver, ADAPTER_PAGE.content_header, 'innerText', 'Station Check')
+        common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.station_connection_status, timeout_in_seconds=60)
         for time_ in range(5):
             try:
                 if ADAPTER_PAGE.get_confirm_selection_button().is_enabled():
@@ -175,7 +176,7 @@ def select_adt_campaign(campaign):
 @when("I select dial number button")
 def select_dial_number_button():
     common.wait_element_to_be_clickable(ADAPTER_PAGE.driver, ADAPTER_PAGE.dial_button)
-    ADAPTER_PAGE.get_dial_button().click()
+    common.click_element(driver_=ADAPTER_PAGE.driver, element=ADAPTER_PAGE.get_dial_button())
     handle_adapter_dnc_number()
     common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.agent_call_panel)
 
