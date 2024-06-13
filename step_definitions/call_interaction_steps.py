@@ -1,5 +1,8 @@
 import common
 import driver
+import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 from pytest_bdd import parsers, when
 from selenium.webdriver import Keys
 from selenium.common import TimeoutException, NoSuchElementException
@@ -29,6 +32,12 @@ def handle_dnc_dialog(action='accept', timeout=5, force=False):
         print("DNC appeared but test could not get it!")
     except TimeoutException:
         print("DNC dialog did not appear!")
+
+
+def check_all_tools_open():
+    common.wait_element_to_be_clickable(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.all_tools_toggle)
+    if CALL_INTERACTION_PAGE.get_all_tools_toggle().text != "Less Tools":
+        CALL_INTERACTION_PAGE.get_all_tools_toggle().click()
 
 
 def check_script_call_tab():
@@ -78,7 +87,6 @@ def fill_worksheet_call_tab():
             CALL_INTERACTION_PAGE.get_worksheet_next_question_button().click()
     CALL_INTERACTION_PAGE.get_worksheet_finish_question_button().click()
 
-
 @when(parsers.parse("I select {campaign} outbound campaign"))
 def select_outbound_campaign(campaign):
     CALL_INTERACTION_PAGE.get_outbound_campaigns_button().click()
@@ -120,9 +128,9 @@ def get_call_answer():
 @when(parsers.parse("I fill the call {tab} tab"))
 def check_call_tab(tab):
     try:
-        globals()['check_' + tab + '_call_tab']()
+        globals()['check_' + tab.replace(' ','_') + '_call_tab']()
     except KeyError:
-        globals()['fill_' + tab + '_call_tab']()
+        globals()['fill_' + tab.replace(' ','_') + '_call_tab']()
 
 
 @when("I crosscheck the call worksheet tab answers")
@@ -147,6 +155,3 @@ def receive_inbound_call():
     common_steps.wait_modal_dialog_close('inbound', 60)  # auto-answer must be enabled
     common.wait_element_attribute_contains(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.hold_call_button, 'data-id', 'toggleHold')
     assert 'Live Call' in CALL_INTERACTION_PAGE.get_call_voice_details_header().text, "LIVE CALL WAS NOT STARTED"
-
-
-
