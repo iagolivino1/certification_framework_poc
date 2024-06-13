@@ -23,7 +23,6 @@ def handle_adapter_dnc_number():
 def handle_call():
     ADAPTER_PAGE.driver.refresh()
     common.system_wait(5)
-    # common.wait_element_to_not_be_displayed(CALL_INTERACTIONS.driver, CALL_INTERACTIONS.softphone_iframe)
     common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.adapter_iframe)
     common.find_and_switch_to_frame(ADAPTER_PAGE.driver, "SoftphoneIframe")
 
