@@ -2,6 +2,7 @@ import common
 from page_objects.login_page import LoginPage
 from pytest_bdd import given, then, when
 from step_definitions import home_page_steps, agent_steps, common_steps
+from test.initialization import base_setup
 
 LOGIN_PAGE = LoginPage()
 
@@ -11,6 +12,12 @@ LOGIN_PAGE = LoginPage()
 def see_login_page():
     LOGIN_PAGE.open_page()
     common.wait_page_element_load(LOGIN_PAGE.driver, LOGIN_PAGE.login_button)
+
+
+@when("I am in direct login page")
+def see_direct_login_page():
+    LOGIN_PAGE.url = base_setup.LAB_CONFIGURATION.get('direct_login_url')
+    see_login_page()
 
 
 @when("I perform login")

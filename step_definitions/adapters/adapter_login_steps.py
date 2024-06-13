@@ -1,5 +1,6 @@
-from pytest_bdd import when
+from pytest_bdd import when, then
 from selenium.webdriver import Keys
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 import common
 from page_objects.adapters.adapter_login_page import AdapterLoginPage
@@ -14,6 +15,14 @@ PLATFORM_HOTKEYS = {
 }
 EXTENSION_NAME = "Five9 Agent Desktop Toolkit"
 
+def check_force_login(agent):
+    try:
+        common.wait_element_to_be_clickable(ADAPTER_LOGIN_PAGE.driver,ADAPTER_LOGIN_PAGE.force_login_button,5)
+        ADAPTER_LOGIN_PAGE.get_force_login_button().click()
+        return
+    except (NoSuchElementException, TimeoutException):
+        return
+
 
 @when("I perform login in adapter")
 def perform_adapter_login():
@@ -21,6 +30,7 @@ def perform_adapter_login():
     ADAPTER_LOGIN_PAGE.get_adapter_user_input().send_keys(agent.get('user'))
     ADAPTER_LOGIN_PAGE.get_adapter_password_input().send_keys(agent.get('pass'))
     ADAPTER_LOGIN_PAGE.get_adapter_login_button().click()
+    check_force_login(agent) #Used on SF - should not break other tests
 
 
 @when("I am in adapter login page")
@@ -30,6 +40,7 @@ def see_adt_login_page():
 
 
 @when("I perform logout in adapter")
+@then("I perform logout in adapter")
 def adapter_logout():
     # get logged agents
     for agent_ in common_steps.AGENT_CREDENTIALS:
@@ -37,12 +48,16 @@ def adapter_logout():
         if not agent_info.get('free') and agent_info.get('free') is not None:
             if agent_info.get('login_type') == 'adapter':
                 common_steps.set_current_browser(common.get_driver_by_instance(agent_info.get('driver'), False).get('instance'))
-                common.switch_tabs(common_steps.COMMON_PAGE.driver, tab_title='Adapter')
+                if common_steps.COMMON_PAGE.driver.title.__contains__("Salesforce"):
+                    common.find_and_switch_to_frame(common_steps.COMMON_PAGE.driver,"SoftphoneIframe")
+                else:
+                    common.switch_tabs(common_steps.COMMON_PAGE.driver, tab_title='Adapter')
                 common.wait_element_to_be_clickable(common_steps.COMMON_PAGE.driver, adapter_steps.ADAPTER_PAGE.agent_state_button)
                 adapter_steps.ADAPTER_PAGE.get_agent_state_button().click()
                 common.wait_element_to_be_clickable(common_steps.COMMON_PAGE.driver, adapter_steps.ADAPTER_PAGE.logout_button)
                 adapter_steps.ADAPTER_PAGE.get_logout_button().click()
-                common.wait_page_to_be(common_steps.COMMON_PAGE.driver, ADAPTER_LOGIN_PAGE.url)
+                if not common_steps.COMMON_PAGE.driver.title.__contains__("Salesforce"):
+                    common.wait_page_to_be(common_steps.COMMON_PAGE.driver, ADAPTER_LOGIN_PAGE.url)
 
                 # release agent
                 agent_info['free'] = True

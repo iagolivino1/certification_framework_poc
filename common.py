@@ -2,7 +2,7 @@ import os
 import yaml
 import driver
 from time import sleep
-from selenium.common import TimeoutException, NoSuchWindowException, StaleElementReferenceException
+from selenium.common import TimeoutException, NoSuchWindowException, StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -87,7 +87,9 @@ def switch_to_frame(driver_, frame):
     driver_.switch_to.frame(frame)
 
 
-def click_element(driver_, element):
+def click_element(driver_, element=None, element_xpath=None):
+    if element_xpath:
+        element = driver_.find_element(By.XPATH, element_xpath)
     driver_.execute_script("arguments[0].click();", element)
 
 
@@ -186,3 +188,54 @@ def element_recursive_click(driver_, element_xpath, click_times=1):
 
 def system_wait(time_to_wait=1):
     sleep(time_to_wait)
+
+def check_window_is_open(driver_, window_name):
+    for handle in driver_.window_handles:
+        title = driver_.title
+        if title.lower().__contains__(window_name):
+            return True
+        else:
+            driver_.switch_to.window(handle)
+    return False
+
+def find_and_switch_to_frame(driver_, frame_name):
+    iframes = driver_.find_elements(By.XPATH, "//iframe")
+    
+    if len(iframes) == 0:
+        driver_.refresh()
+        wait_page_to_be_loaded(driver_)
+        iframes = driver_.find_elements(By.XPATH, "//iframe")
+
+        if len(iframes) == 0:
+            raise NoSuchElementException
+
+    for index, iframe in enumerate(iframes):
+        # print(iframe)
+        if iframe.get_property("name") == frame_name:
+            switch_to_frame(driver_, iframe)
+            return
+def check_window_is_open(driver_, window_name):
+    for handle in driver_.window_handles:
+        title = driver_.title
+        if title.lower().__contains__(window_name):
+            return True
+        else:
+            driver_.switch_to.window(handle)
+    return False
+
+def find_and_switch_to_frame(driver_, frame_name):
+    iframes = driver_.find_elements(By.XPATH, "//iframe")
+    
+    if len(iframes) == 0:
+        driver_.refresh()
+        wait_page_to_be_loaded(driver_)
+        iframes = driver_.find_elements(By.XPATH, "//iframe")
+
+        if len(iframes) == 0:
+            raise NoSuchElementException
+
+    for index, iframe in enumerate(iframes):
+        # print(iframe)
+        if iframe.get_property("name") == frame_name:
+            switch_to_frame(driver_, iframe)
+            return
