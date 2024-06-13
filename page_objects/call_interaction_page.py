@@ -6,7 +6,7 @@ class CallInteractionPage(object):
         self.driver = driver
         self.connector_url = None
         self.number_input = "//input[@id='MakeCallFilter-filter-input']"
-        self.dial_button = "//button[@id='NewCallOptions-action-button']"
+        self.dial_button = "//button[@id='NewCallOptions-action-button']"  
         self.dnc_dialog = "//div[@id='okay-cancel-dialog']"
         self.ok_dialog_button = "//button[@id='OkCancelDialog-ok-button']"
         self.cancel_dialog_button = "//button[@id='OkCancelDialog-cancel-button']"
@@ -32,10 +32,18 @@ class CallInteractionPage(object):
         self.worksheet_move_to_panel = "//*[@href='#'][text()='Move to Panel']"
         self.worksheet_questions = "//div[@class='questionList']/div"
         self.worksheet_current_question = "//div[@class='worksheetQuestionNumber']"
-        self.worksheet_next_question_button = "//button[contains(@class, 'ws_next_btn')] | //button[@id='ws_next_btn']"
-        self.worksheet_previous_question_button = "//button[contains(@class, 'ws_prev_btn')] | //button[@id='ws_prev_btn'"
+        self.worksheet_next_question_button = "//button[contains(@class, 'ws_next_btn')]"
+        self.worksheet_previous_question_button = "//button[contains(@class, 'ws_prev_btn')]"
         self.worksheet_finish_question_button = "//button[contains(@class, 'ws_finish_btnbtn')] | //button[@id='ws_finish_btn']"
         self.worksheet_question_answer_text_area = "//textarea[@id='ws_answer_line']"
+        self.softphone_iframe = "//iframe[@id='SoftphoneIframe']"
+        self.adapter_agent_call_panel = "//div[@id='callPanel']"
+        self.all_tools_toggle = "//div[@id='all-tools-toggle']"
+        
+        self.softphone_iframe = "//iframe[@id='SoftphoneIframe']"
+        self.adapter_agent_call_panel = "//div[@id='callPanel']"
+        self.all_tools_toggle = "//div[@id='all-tools-toggle']"
+        
 
     def get_number_input(self):
         return self.driver.find_element(By.XPATH, self.number_input)
@@ -126,3 +134,13 @@ class CallInteractionPage(object):
 
     def get_worksheet_question_answer_text_area(self):
         return self.driver.find_element(By.XPATH, self.worksheet_question_answer_text_area)
+    
+    def get_iframe_softphone(self):
+        return self.driver.find_element(By.XPATH, self.softphone_iframe)
+    
+    def get_adapter_agent_call_panel(self):
+        return self.driver.find_element(By.XPATH, self.adapter_agent_call_panel)
+
+    def get_all_tools_toggle(self):
+        return self.driver.find_element(By.XPATH, self.all_tools_toggle)
+    

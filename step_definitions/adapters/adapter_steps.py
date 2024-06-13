@@ -20,6 +20,12 @@ def handle_adapter_dnc_number():
     except TimeoutException:
         print("DNC dialog did not appear!")
 
+def handle_call():
+    ADAPTER_PAGE.driver.refresh()
+    common.system_wait(5)
+    common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.adapter_iframe)
+    common.find_and_switch_to_frame(ADAPTER_PAGE.driver, "SoftphoneIframe")
+
 
 def handle_tools_button(action='open'):
     try:
@@ -96,7 +102,7 @@ def confirm_selection():
                 ADAPTER_PAGE.get_reset_station_button().click()
             except AssertionError:
                 print(f"station {station_id} not connected. retry #{time_}")
-    common.wait_element_to_be_clickable(ADAPTER_PAGE.driver, ADAPTER_PAGE.confirm_selection_button)
+    common.wait_element_to_be_clickable(ADAPTER_PAGE.driver, ADAPTER_PAGE.confirm_selection_button, 60)
     ADAPTER_PAGE.get_confirm_selection_button().click()
 
 
@@ -104,7 +110,7 @@ def confirm_selection():
 def select_adt_skill(skill):
     global NUMBER_OF_SELECTED_SKILLS
     common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.content_header)
-    common.wait_page_element_load(ADAPTER_PAGE.driver, common_steps.COMMON_PAGE.all_skills_button)
+    common.wait_page_element_load(ADAPTER_PAGE.driver, common_steps.COMMON_PAGE.all_skills_button, 120)
     selected_skill = None
     if skill == 'all':
         selected_skill = common_steps.COMMON_PAGE.get_all_skills_button()
@@ -174,6 +180,12 @@ def select_dial_number_button():
     handle_adapter_dnc_number()
     common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.agent_call_panel)
 
+@when("I select dial number button on sf")
+def select_dial_number_button_sf():
+    common.wait_element_to_be_clickable(ADAPTER_PAGE.driver, ADAPTER_PAGE.dial_button)
+    ADAPTER_PAGE.get_dial_button().click()
+    handle_call()
+    common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.agent_call_panel)
 
 @when("I select adapter script button")
 def select_script_button():
@@ -240,3 +252,20 @@ def accept_adapter_inbound_call():
     assert ADAPTER_PAGE.get_active_call_type().text.strip() == 'On Call', f"ACTIVE CALL LABEL IS NOT CORRECT: {ADAPTER_PAGE.get_active_call_type().text.strip()}"
     # update call number
     CALL_NUMBER = ADAPTER_PAGE.get_active_caller_name().text.strip()
+
+@when("I accept the inbound call in SF adapter")
+def accept_sf_adapter_inbound_call():
+    global CALL_NUMBER
+    handle_call()
+    common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.inbound_call_panel)
+    common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.active_call_type)
+    common.wait_element_attribute_contains(ADAPTER_PAGE.driver, ADAPTER_PAGE.active_call_type, 'innerText', 'On Call')
+    assert ADAPTER_PAGE.get_active_call_type().text.strip() == 'On Call', f"ACTIVE CALL LABEL IS NOT CORRECT: {ADAPTER_PAGE.get_active_call_type().text.strip()}"
+    # update call number
+    CALL_NUMBER = ADAPTER_PAGE.get_active_caller_name().text.strip()
+
+@when("I switch to adapter Iframe")
+def switch_to_iframe():
+    common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.adapter_iframe,60)
+    common.switch_to_frame(ADAPTER_PAGE.driver, ADAPTER_PAGE.get_iframe_softphone())
+    common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.adapter_logo)

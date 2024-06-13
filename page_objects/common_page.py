@@ -10,6 +10,7 @@ class CommonPage(object):
         self.modal_back_button = "//button[@id='WizardBase-back-button']"
         self.available_skills = "//div[@data-f9-template='agent-skill-select-item']/label | //ul[@id='skills_list']//label"
         self.all_skills_button = "//button[@id='agent-skill-select-toggle'] | //input[@id='all_skills']"
+        self.modal_dialog_skills_sf = "//div[@data-f9-template='agent-skill-select']//h1[contains(., '<title>')]"
 
     def get_modal_dialog(self, title=None):
         return self.driver.find_element(By.XPATH, self.modal_dialog.replace("<title>", title))
