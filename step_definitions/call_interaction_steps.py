@@ -33,6 +33,7 @@ def handle_dnc_dialog(action='accept', timeout=5, force=False):
     except TimeoutException:
         print("DNC dialog did not appear!")
 
+
 def check_all_tools_open():
     common.wait_element_to_be_clickable(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.all_tools_toggle)
     if CALL_INTERACTION_PAGE.get_all_tools_toggle().text != "Less Tools":
