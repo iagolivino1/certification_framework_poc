@@ -87,7 +87,7 @@ def confirm_selection():
             try:
                 if ADAPTER_PAGE.get_confirm_selection_button().is_enabled():
                     ADAPTER_PAGE.get_confirm_selection_button().click()
-                    break
+                    return
                 try:
                     if "Connecting" in ADAPTER_PAGE.get_station_connection_status().text:
                         common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.reset_station_button)

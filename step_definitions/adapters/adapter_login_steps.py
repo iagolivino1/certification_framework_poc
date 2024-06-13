@@ -1,5 +1,6 @@
 from pytest_bdd import when
 from selenium.webdriver import Keys
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 import common
 from page_objects.adapters.adapter_login_page import AdapterLoginPage
@@ -19,7 +20,7 @@ def check_force_login(agent):
         common.wait_element_to_be_clickable(ADAPTER_LOGIN_PAGE.driver,ADAPTER_LOGIN_PAGE.force_login_button,5)
         ADAPTER_LOGIN_PAGE.get_force_login_button().click()
         return
-    except:
+    except (NoSuchElementException, TimeoutException):
         return
 
 

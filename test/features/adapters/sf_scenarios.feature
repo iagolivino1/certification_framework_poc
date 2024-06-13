@@ -24,8 +24,8 @@ Feature: SF
         When I select <station> for adapter station type
         When I configure adapter station with <station_id> id
         When I confirm the station selection
-        When I proceed to next step
         When I select all skill in adapter
+        When I confirm the skills selection
         When I see the adapter agent home page
         When I select make a call option
         When I fill <inbound_number2> in call input number

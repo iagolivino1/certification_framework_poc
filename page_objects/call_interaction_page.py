@@ -20,7 +20,7 @@ class CallInteractionPage(object):
         self.caller_contact = "//span[@class='info-contact']"
         self.interaction_tab = "//li[contains(@id, 'context')]/a"
         self.history_tab = "//li[contains(@id, 'history')]/a"
-        self.script_tab = "//li[contains(@id, 'script')]/a | //button[@id='script_btn']"
+        self.script_tab = "//li[contains(@id, 'script')]/a"
         self.script_content = "//iframe[@id='custom-script']"
         self.script_title = "//span[contains(text(), 'Inbound Call Arriving')]"
         self.script_caller_data = "//td[@class='grey_box cell']"
