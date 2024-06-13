@@ -102,9 +102,9 @@ def call_number(number):
     CALL_INTERACTION_PAGE.get_number_input().clear()
     CALL_INTERACTION_PAGE.get_number_input().send_keys(number)
     CALL_INTERACTION_PAGE.get_number_input().send_keys(Keys.ESCAPE)
+    common.click_element(driver_=CALL_INTERACTION_PAGE.driver, element_xpath="//body")  # set focus out of input
     common.wait_element_to_be_clickable(CALL_INTERACTION_PAGE.driver, CALL_INTERACTION_PAGE.dial_button)
-    common.system_wait(1)
-    CALL_INTERACTION_PAGE.get_dial_button().click()
+    common.click_element(driver_=CALL_INTERACTION_PAGE.driver, element=CALL_INTERACTION_PAGE.get_dial_button())  # it is working better than built-in click
     handle_dnc_dialog()
     common_steps.wait_modal_dialog_open('manual', 15)
     common_steps.select_modal_next_button()

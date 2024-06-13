@@ -29,15 +29,12 @@ def set_agent_ready_for(options):
     AGENT_HOME.get_ready_for_option().click()
     for option in options:
         if option.lower() == 'text':
-            # checkbox = AGENT_HOME.get_text_channel_checkbox()
             checkbox_status = AGENT_HOME.text_channel_checkbox_status
             checkbox_path = AGENT_HOME.text_channel_checkbox
         elif option.lower() == 'voice':
-            # checkbox = AGENT_HOME.get_voice_channel_checkbox()
             checkbox_status = AGENT_HOME.voice_channel_checkbox_status
             checkbox_path = AGENT_HOME.voice_channel_checkbox
         elif option.lower() == 'vm':
-            # checkbox = AGENT_HOME.get_voicemail_channel_checkbox()
             checkbox_status = AGENT_HOME.voicemail_channel_checkbox_status
             checkbox_path = AGENT_HOME.voicemail_channel_checkbox
         else:
