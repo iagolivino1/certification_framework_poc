@@ -57,6 +57,8 @@ class AdapterPage(object):
         self.inbound_call_panel = "//header[contains(text(), 'Inbound Call')]/.."
         self.active_call_type = "//p[@id='active_callType']"
         self.active_caller_name = "//p[@id='active_callerName']"
+        self.adapter_iframe = "//iframe[@id='SoftphoneIframe']"
+        self.adapter_logo = "//div[@id='logo']"
 
     def get_content_header(self):
         return self.driver.find_element(By.XPATH, self.content_header)
@@ -213,3 +215,9 @@ class AdapterPage(object):
 
     def get_active_caller_name(self):
         return self.driver.find_element(By.XPATH, self.active_caller_name)
+
+    def get_iframe_softphone(self):
+        return self.driver.find_element(By.XPATH, self.adapter_iframe)
+    
+    def get_iframe_logo(self):
+        return self.driver.find_element(By.XPATH, self.adapter_logo)

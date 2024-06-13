@@ -2,12 +2,16 @@ import common
 from common import *
 from step_definitions import login_steps, agent_steps, home_page_steps, common_steps, station_setup_steps
 
+LAB_CONFIGURATION = {}
+
 
 def set_base_pages(instances=1):
+    global LAB_CONFIGURATION
     common.TEST_INFO['lab'] = get_config_file_section('config.yml', 'configuration').get('lab').split('_')[0]
     common.TEST_INFO['platform'] = get_config_file_section('config.yml', 'configuration').get('platform_tool').split('_')[0]
 
     lab_config = f"configuration/lab/{get_config_file_section('config.yml', 'configuration').get('lab')}.yml"
+    LAB_CONFIGURATION = get_config_file_section(lab_config, 'configuration')
     try:
         common_steps.AGENT_CREDENTIALS = get_config_file_section(lab_config, 'credentials')
     except KeyError as e:
@@ -19,12 +23,12 @@ def set_base_pages(instances=1):
         common_steps.AGENT_CREDENTIALS.get(agent)['ready_channels'] = []
 
     # set login url if any
-    login_url = get_config_file_section(lab_config, 'configuration').get('login_url')
+    login_url = LAB_CONFIGURATION.get('login_url')
     if login_url:
         login_steps.LOGIN_PAGE.url = login_url
 
     # set connector url if any
-    connector_url_ = get_config_file_section(lab_config, 'configuration').get('connector_url')
+    connector_url_ = LAB_CONFIGURATION.get('connector_url')
     if connector_url_:
         common_steps.COMMON_PAGE.connector_url = connector_url_
 

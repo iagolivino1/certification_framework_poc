@@ -151,7 +151,8 @@ def select_modal_next_button():
         o_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'OK'))
         y_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Yes'))
         v_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard'))
-        if len(n_buttons) > 0 or len(o_buttons) > 0 or len(y_buttons) > 0 or len(v_buttons) > 0:
+        c_buttons = COMMON_PAGE.driver.find_elements(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Confirm'))
+        if len(n_buttons) > 0 or len(o_buttons) > 0 or len(y_buttons) > 0 or len(v_buttons) > 0 or len(c_buttons) > 0:
             try:
                 if COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Next')).is_displayed() \
                         and COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Next')).is_enabled:
@@ -188,6 +189,14 @@ def select_modal_next_button():
                 if COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard')).is_displayed() \
                         and COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard')).is_enabled():
                     COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'View My Dashboard')).click()
+                    button_clicked = True
+                    break
+            except NoSuchElementException:
+                pass
+            try:
+                if COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Confirm')).is_displayed() \
+                        and COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Confirm')).is_enabled:
+                    COMMON_PAGE.driver.find_element(By.XPATH, COMMON_PAGE.modal_submit_button.replace('<text>', 'Confirm')).click()
                     button_clicked = True
                     break
             except NoSuchElementException:
