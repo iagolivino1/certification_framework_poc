@@ -93,6 +93,7 @@ def confirm_selection():
                         if common.wait_element_to_be_enabled(ADAPTER_PAGE.driver, ADAPTER_PAGE.reset_station_button):
                             assert 'green' in ADAPTER_PAGE.get_station_connection_status().get_attribute('class')
                             assert 'Connected' in ADAPTER_PAGE.get_station_connection_status().get_attribute('innerText')
+                            break
                 except StaleElementReferenceException:
                     pass
             except TimeoutException:
