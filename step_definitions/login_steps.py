@@ -1,8 +1,8 @@
 import common
 from page_objects.login_page import LoginPage
 from pytest_bdd import given, then, when
-from step_definitions import home_page_steps, agent_steps, common_steps
 from test.initialization import base_setup
+from step_definitions import home_page_steps, agent_steps, common_steps, chat_interaction_steps
 
 LOGIN_PAGE = LoginPage()
 
@@ -36,6 +36,22 @@ def perform_logout():
         if not agent_info.get('free') and agent_info.get('free') is not None:
             common_steps.set_current_browser(common.get_driver_by_instance(agent_info.get('driver'), False).get('instance'))
             common.switch_tabs(agent_steps.AGENT_HOME.driver, tab_title='Agent Desktop Plus')
+            if common_steps.TEARDOWN:
+                try:
+                    if agent_steps.AGENT_HOME.get_set_disposition_button().is_displayed():
+                        if agent_steps.AGENT_HOME.get_set_disposition_button().is_enabled():
+                            agent_steps.set_disposition('No Disposition')
+                            print('active interaction disposed.')
+                except Exception as e:
+                    print('an active interaction was found but some error occurred while trying to dispose it.')
+                    print(e,)
+                try:
+                    if chat_interaction_steps.CHAT_INTERACTION_PAGE.get_set_disposition_button().is_displayed():
+                        if chat_interaction_steps.CHAT_INTERACTION_PAGE.get_set_disposition_button().is_enabled():
+                            chat_interaction_steps.dispose_chat()
+                except Exception as e:
+                    print("error when trying to dispose chat interaction. may the logout will not be correctly performed")
+                    print(e,)
             agent_steps.AGENT_HOME.get_agent_profile_button().click()
             agent_steps.AGENT_HOME.get_agent_logout_element().click()
             common.wait_page_element_load(agent_steps.AGENT_HOME.driver, agent_steps.AGENT_HOME.logout_reason_dialog)

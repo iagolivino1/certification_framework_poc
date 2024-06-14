@@ -1,14 +1,22 @@
 configuration:
   login_url: https://qalogin11.five9lab.com/
+  direct_login_url: https://qaapp11.five9lab.com/?role=Agent
   adapter_login_url: https://qaapp11d.five9lab.com/clients/integrations/adt.main.html
-  chat_console_url: https://qaapp11.five9lab.com/five9_clients/consoles_latest/ChatConsole/ChatDemo.html?tenant=qaenv02_migr&profiles=iago_inbound
-  email_console_url: https://qaapp11.five9lab.com/consoles/EmailConsole/EmailDemo.html?tenant=qaenv02_migr&profiles=iago_inbound
+  chat_console_url: https://qaapp11.five9lab.com/five9_clients/consoles_latest/ChatConsole/ChatDemo.html?tenant=mci_qa02_autocert&profiles=<chat_camp>
+  email_console_url: https://qaapp11.five9lab.com/consoles/EmailConsole/EmailDemo.html?tenant=mci_qa02_autocert&profiles=<chat_camp>
   connector_url: https://www.google.com/
 
 credentials:
   agent_0:
     user: <user>
     pass: <pass>
+    station_id: 660200000001164
+    inbound_camp: cert_in_1
+    outbound_camp: cert_out
+    chat_camp: cert_chat
   agent_1:
     user: <user>
     pass: <pass>
+    station_id: 660200000001165
+    inbound_camp: cert_in_2
+    outbound_camp: cert_out

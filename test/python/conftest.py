@@ -2,12 +2,12 @@ import importlib
 import pytest
 import driver
 import common
-from step_definitions import common_steps
-
+from step_definitions import common_steps, login_steps
 
 pytest_plugins = [
    "step_definitions.agent_steps",
    "step_definitions.chat_template_steps",
+   "step_definitions.chat_interaction_steps",
    "step_definitions.common_steps",
    "step_definitions.home_page_steps",
    "step_definitions.login_steps",
@@ -44,6 +44,10 @@ def pytest_bdd_after_scenario(request, feature, scenario):
     print('reset variables...')
     common_steps.reset_variables()
     print('variables reset!')
+    print('checking if any agent is logged in...')
+    if request.node.__scenario_report__.current_step_report.failed:
+        login_steps.perform_logout()
+    print('logged agent check done!')
     print('closing all existent browser instances...')
     open_browsers = len(driver.DRIVERS)
     for d in range(open_browsers):

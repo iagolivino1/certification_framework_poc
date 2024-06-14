@@ -13,16 +13,18 @@ class ChatTemplatePage(object):
         self.name_input = "//input[@id='name']"
         self.email_input = "//input[@id='email']"
         self.question_textarea = "//textarea[@id='question']"
-        self.loading_message = "//div[@id='connecting-message']"
+        self.loading_message = "//div[@id='connecting-message']/following-sibling::div"
         self.input_message = "//textarea[@id='input-message']"
-        self.send_message_button = "//button[@id='send-button']"
+        self.chat_template_send_message_button = "//button[@id='send-button']"
         self.chat_content = "//div[@class='chat-content ui-content']"
         self.end_conversation_button = "//a[@id='terminate-conversation-button']"
+        self.close_conversation_button = "//a[@id='close-button']"
         self.end_who = "//div[@class='end-who']"
         self.send_survey_button = "//button[@id='send-survey-button']"
         self.end_chat_popup = "//div[@id='conversation-terminate-chat-popup']"
         self.end_chat_popup_button = "//div[@id='conversation-terminate-chat-popup']//a[text()='End Chat']"
         self.cancel_chat_popup_button = "//div[@id='conversation-terminate-chat-popup']//a[text()='Cancel']"
+        self.start_new_chat_button = "//a[text()='Start New Chat']"
 
     def open_page(self):
         self.driver.get(self.url)
@@ -54,14 +56,17 @@ class ChatTemplatePage(object):
     def get_loading_message(self):
         return self.driver.find_element(By.XPATH, self.loading_message)
 
-    def get_send_message_button(self):
-        return self.driver.find_element(By.XPATH, self.send_message_button)
+    def get_chat_template_send_message_button(self):
+        return self.driver.find_element(By.XPATH, self.chat_template_send_message_button)
 
     def get_chat_content(self):
         return self.driver.find_element(By.XPATH, self.chat_content)
 
     def get_end_conversation_button(self):
         return self.driver.find_element(By.XPATH, self.end_conversation_button)
+
+    def get_close_conversation_button(self):
+        return self.driver.find_element(By.XPATH, self.close_conversation_button)
 
     def get_end_who(self):
         return self.driver.find_element(By.XPATH, self.end_who)
@@ -77,3 +82,6 @@ class ChatTemplatePage(object):
 
     def get_cancel_chat_popup_button(self):
         return self.driver.find_element(By.XPATH, self.cancel_chat_popup_button)
+
+    def get_start_new_chat_button(self):
+        return self.driver.find_element(By.XPATH, self.start_new_chat_button)
