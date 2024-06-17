@@ -9,6 +9,18 @@ credentials:
     agent_0:
         user: <user>
         pass: <pass>
+        station_id: <station_id>
+        inbound_camp: <inbound>
+        outbound_camp: <outbound>
+        chat_camp: <chat>
     agent_1:
+        user: <user>
+        pass: <pass>
+        station_id: <station_id>
+        inbound_camp: <inbound>
+        outbound_camp: <outbound>
+
+sf_credentials:
+    agent_0:
         user: <user>
         pass: <pass>

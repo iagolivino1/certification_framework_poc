@@ -2,6 +2,7 @@ import importlib
 import pytest
 import driver
 import common
+import allure
 from step_definitions import common_steps, login_steps
 
 pytest_plugins = [
@@ -16,7 +17,8 @@ pytest_plugins = [
    "step_definitions.call_interaction_steps",
    "step_definitions.adapters.adapter_login_steps",
    "step_definitions.adapters.adapter_steps",
-   "step_definitions.adapters.adapter_worksheet_steps"
+   "step_definitions.adapters.adapter_worksheet_steps",
+   "step_definitions.sf_login_steps"
 ]
 
 
@@ -68,3 +70,9 @@ def pytest_bdd_after_step(request, feature, scenario, step, step_func, step_func
     tab_info = {'title': common_steps.COMMON_PAGE.driver.title, 'browser_number': int(common.get_driver_by_instance(common_steps.COMMON_PAGE.driver))}
     common.BROWSER_TABS[common_steps.COMMON_PAGE.driver.current_window_handle] = tab_info
     print(f"step finished!")
+
+def pytest_bdd_step_error(request, feature, scenario, step, step_func, step_func_args, exception):
+    open_browsers = len(driver.DRIVERS)
+    for d in range(open_browsers):
+        d_ = driver.DRIVERS.get(str(d)).get('instance')
+        allure.attach(d_.get_screenshot_as_png(), name=d_.title, attachment_type=allure.attachment_type.PNG)
