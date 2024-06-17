@@ -13,6 +13,9 @@ chrome_flags:
     third_party_cookie_phaseout: --test-third-party-cookie-phaseout
     use-fake-ui-for-media-stream: --use-fake-ui-for-media-stream
 
+chrome_experimental:
+    third-party-storage-partitioning: 2
+    
 chrome_extensions:
     softphone: 'softphone.crx'
     adt_plus: 'adt_plus.crx'

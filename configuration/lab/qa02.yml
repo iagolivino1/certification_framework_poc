@@ -14,9 +14,16 @@ credentials:
     inbound_camp: cert_in_1
     outbound_camp: cert_out
     chat_camp: cert_chat
+    
   agent_1:
     user: <user>
     pass: <pass>
     station_id: 660200000001165
     inbound_camp: cert_in_2
     outbound_camp: cert_out
+
+sf_credentials:
+    agent_0:
+        user: <user>
+        pass: <pass>
+    

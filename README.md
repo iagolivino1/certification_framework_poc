@@ -135,6 +135,23 @@ pytest -m "check_left_menu"
 ```
 ___
 ___
+## Generating reports
+**Go to `reports/` folder:**
+```bash
+cd reports
+```
+
+**Generate the report:**
+```bash
+allure generate
+```
+
+**Open the generated report:**
+```bash
+allure open
+```
+___
+___
 ### Steps to create new test:
 
 1. **Create the .feature file:**\
