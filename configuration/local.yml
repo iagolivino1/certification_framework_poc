@@ -19,3 +19,4 @@ chrome_experimental:
 chrome_extensions:
     softphone: 'softphone.crx'
     adt_plus: 'adt_plus.crx'
+    netsuite: 'netsuite.crx'
