@@ -9,6 +9,7 @@ def set_base_pages(instances=1):
     global LAB_CONFIGURATION
     common.TEST_INFO['lab'] = get_config_file_section('config.yml', 'configuration').get('lab').split('_')[0]
     common.TEST_INFO['platform'] = get_config_file_section('config.yml', 'configuration').get('platform_tool').split('_')[0]
+    common.LOGGER.system(message=f"test info: {TEST_INFO}")
 
     lab_config = f"configuration/lab/{get_config_file_section('config.yml', 'configuration').get('lab')}.yml"
     LAB_CONFIGURATION = get_config_file_section(lab_config, 'configuration')
@@ -17,6 +18,7 @@ def set_base_pages(instances=1):
     except KeyError as e:
         print(f'could not find "credentials" section in {driver.CONFIG_FILE}.\n{e}\nusing the default...')
         common_steps.AGENT_CREDENTIALS = get_config_file_section('config.yml', 'credentials')
+    common.LOGGER.system(message=f"lab configuration: {LAB_CONFIGURATION}")
 
     # set ready for field
     for agent in common_steps.AGENT_CREDENTIALS:

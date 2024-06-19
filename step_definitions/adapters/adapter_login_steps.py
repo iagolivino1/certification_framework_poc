@@ -1,8 +1,7 @@
+import common
 from pytest_bdd import when, then
 from selenium.webdriver import Keys
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-
-import common
 from page_objects.adapters.adapter_login_page import AdapterLoginPage
 from step_definitions import common_steps
 from step_definitions.adapters import adapter_steps
@@ -15,12 +14,14 @@ PLATFORM_HOTKEYS = {
 }
 EXTENSION_NAME = "Five9 Agent Desktop Toolkit"
 
-def check_force_login(agent):
+
+def check_force_login():
     try:
-        common.wait_element_to_be_clickable(ADAPTER_LOGIN_PAGE.driver,ADAPTER_LOGIN_PAGE.force_login_button,5)
+        common.wait_element_to_be_clickable(ADAPTER_LOGIN_PAGE.driver, ADAPTER_LOGIN_PAGE.force_login_button, 5)
         ADAPTER_LOGIN_PAGE.get_force_login_button().click()
         return
     except (NoSuchElementException, TimeoutException):
+        common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message='no force login dialog displayed')
         return
 
 
@@ -30,13 +31,17 @@ def perform_adapter_login():
     ADAPTER_LOGIN_PAGE.get_adapter_user_input().send_keys(agent.get('user'))
     ADAPTER_LOGIN_PAGE.get_adapter_password_input().send_keys(agent.get('pass'))
     ADAPTER_LOGIN_PAGE.get_adapter_login_button().click()
-    check_force_login(agent) #Used on SF - should not break other tests
+    check_force_login()  # Used on SF - should not break other tests
+    common.LOGGER.info(agent=agent.get('user'), message=f'user: {agent.get("user")}, pass: {agent.get("pass")} | '
+                                                        f'element: {ADAPTER_LOGIN_PAGE.adapter_login_button} | '
+                                                        f'action: click()')
 
 
 @when("I am in adapter login page")
 def see_adt_login_page():
     assert ADAPTER_LOGIN_PAGE.url in ADAPTER_LOGIN_PAGE.driver.current_url
     common.wait_page_element_load(ADAPTER_LOGIN_PAGE.driver, ADAPTER_LOGIN_PAGE.adapter_user_input)
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message='adapter login page loaded')
 
 
 @when("I perform logout in adapter")
@@ -47,9 +52,10 @@ def adapter_logout():
         agent_info = common_steps.AGENT_CREDENTIALS.get(agent_)
         if not agent_info.get('free') and agent_info.get('free') is not None:
             if agent_info.get('login_type') == 'adapter':
+                common.LOGGER.info(agent=agent_, message='adapter agent found')
                 common_steps.set_current_browser(common.get_driver_by_instance(agent_info.get('driver'), False).get('instance'))
                 if common_steps.COMMON_PAGE.driver.title.__contains__("Salesforce"):
-                    common.find_and_switch_to_frame(common_steps.COMMON_PAGE.driver,"SoftphoneIframe")
+                    common.find_and_switch_to_frame(common_steps.COMMON_PAGE.driver, "SoftphoneIframe")
                 else:
                     common.switch_tabs(common_steps.COMMON_PAGE.driver, tab_title='Adapter')
                 common.wait_element_to_be_clickable(common_steps.COMMON_PAGE.driver, adapter_steps.ADAPTER_PAGE.agent_state_button)
@@ -58,9 +64,12 @@ def adapter_logout():
                 adapter_steps.ADAPTER_PAGE.get_logout_button().click()
                 if not common_steps.COMMON_PAGE.driver.title.__contains__("Salesforce"):
                     common.wait_page_to_be(common_steps.COMMON_PAGE.driver, ADAPTER_LOGIN_PAGE.url)
+                common.LOGGER.info(agent=agent_, message='agent successfully logged out')
 
                 # release agent
+                common.LOGGER.info(agent=agent_, message='releasing agent')
                 agent_info['free'] = True
                 agent_info['driver'] = None
                 agent_info['login_type'] = None
                 common_steps.AGENT_CREDENTIALS[agent_] = agent_info
+                common.LOGGER.info(agent=agent_, message=f'agent released | info: {agent_info}')

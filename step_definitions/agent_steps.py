@@ -15,10 +15,11 @@ def see_agent_home_page():
 
 @when("I check the left menu elements visibility")
 def check_agent_left_menu():
-    common.assert_condition(AGENT_HOME.get_agent_status_button().is_displayed(), "STATUS BUTTON IS NOT VISIBLE")
-    common.assert_condition(AGENT_HOME.get_agent_home_button().is_displayed(), "HOME BUTTON IS NOT VISIBLE")
-    common.assert_condition(AGENT_HOME.get_agent_voice_button().is_displayed(), "CALL BUTTON IS NOT VISIBLE")
-    common.assert_condition(AGENT_HOME.get_agent_voicemail_button().is_displayed(), "VOICEMAIL BUTTON IS NOT VISIBLE")
+    assert AGENT_HOME.get_agent_status_button().is_displayed(), "STATUS BUTTON IS NOT VISIBLE"
+    assert AGENT_HOME.get_agent_home_button().is_displayed(), "HOME BUTTON IS NOT VISIBLE"
+    assert AGENT_HOME.get_agent_voice_button().is_displayed(), "CALL BUTTON IS NOT VISIBLE"
+    assert AGENT_HOME.get_agent_voicemail_button().is_displayed(), "VOICEMAIL BUTTON IS NOT VISIBLE"
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="left menu elements visibility pass")
 
 
 @when(parsers.parse("I change agent state to ready for {options}"))
@@ -45,9 +46,11 @@ def set_agent_ready_for(options):
         if "checked" not in AGENT_HOME.driver.find_element(By.XPATH, checkbox_status).get_attribute("class"):
             common.click_element(driver_=AGENT_HOME.driver, element_xpath=checkbox_path)
             common.wait_element_class_contains(AGENT_HOME.driver, checkbox_status, "checked")
+        common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"agent state {option} selected")
     AGENT_HOME.get_confirm_channel_button().click()
     common.wait_element_class_contains(AGENT_HOME.driver, AGENT_HOME.agent_status_button, "state-ready")
     common_steps.get_agent_by_driver(AGENT_HOME.driver)['ready_channels'] = selected_channels
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"agent ready channels: {selected_channels}")
 
 
 @when("I open agent call option")
@@ -82,3 +85,4 @@ def set_disposition(disposition):
                 disposition_.click()
                 break
     common.wait_page_element_load(AGENT_HOME.driver, call_interaction_steps.CALL_INTERACTION_PAGE.number_input)
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"disposition {disposition} selected")

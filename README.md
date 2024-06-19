@@ -133,6 +133,15 @@ example:
 ```bash
 pytest -m "check_left_menu"
 ```
+
+**Filter logs by level:**
+```bash
+pytest <any_option> --log-level=<log_level>
+```
+example:
+```bash
+pytest test_check_left_menu.py --log-level=WARNING
+```
 ___
 ___
 ## Generating reports

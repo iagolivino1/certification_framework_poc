@@ -39,6 +39,11 @@ def get_agent_by_driver(driver_):
             return AGENT_CREDENTIALS.get(agent_)
 
 
+def get_agent_for_logs():
+    agent_info = get_agent_by_driver(COMMON_PAGE.driver)
+    return 'no_agent' if not agent_info else agent_info.get('user')
+
+
 def get_agent_by_attributes(user=None, station_id=None, inbound_camp=None, outbound_camp=None, chat_camp=None, ready_for=None):
     agent = {}
     for agent_ in AGENT_CREDENTIALS:

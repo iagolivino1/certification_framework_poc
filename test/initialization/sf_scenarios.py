@@ -1,3 +1,4 @@
+import common
 from common import *
 from step_definitions import call_interaction_steps, common_steps, sf_login_steps, script_steps
 from step_definitions.adapters import adapter_login_steps, adapter_steps, adapter_worksheet_steps
@@ -22,5 +23,6 @@ def check_sf_basic_calls():
     try:
         sf_login_steps.AGENT_CREDENTIALS = get_config_file_section(lab_config, 'sf_credentials')
     except KeyError as e:
-        print(f'could not find "credentials" section in {driver.CONFIG_FILE}.\n{e}\nusing the default...')
+        common.LOGGER.warning(message=f'could not find "credentials" section in {driver.CONFIG_FILE}.\n{e}\nusing the default...')
         sf_login_steps.AGENT_CREDENTIALS = get_config_file_section('config.yml', 'credentials')
+        common.LOGGER.info(message=f"sf agent credentials: {sf_login_steps.AGENT_CREDENTIALS}")

@@ -18,12 +18,15 @@ def check_adt_basic_calls():
     common_steps.STARTED_PAGES.append(call_interaction_steps.CALL_INTERACTION_PAGE)
 
     # find the extension
+    common.LOGGER.system(message="starting adapter setup")
     for _driver in driver.DRIVERS:
         driver_ = driver.DRIVERS.get(_driver).get('instance')
         set_adapter_shortcut(driver_, adapter_login_steps.EXTENSION_NAME)
         set_adapter_url(driver_, set_adapter_shortcut(driver_, adapter_login_steps.EXTENSION_NAME, True))
+    common.LOGGER.system(message="adapter setup done")
 
     # open the adapter window
+    common.LOGGER.system(message="opening adapter window")
     for _driver in driver.DRIVERS:
         driver_ = driver.DRIVERS.get(_driver).get('instance')
         driver_.switch_to.window(driver_.current_window_handle)
@@ -38,6 +41,7 @@ def check_adt_basic_calls():
                 if driver_.title != 'Adapter':
                     common.wait_page_element_load(driver_, "//*[@id='username']", 60)
                     break
+    common.LOGGER.system(message="adapter window opened")
 
 
 # ----- SETUP ----- #
@@ -55,12 +59,15 @@ def set_adapter_shortcut(driver_, extension_text, return_id=False):
             break
     if not selected_extension:
         raise Exception(f"extension {extension_text} not found")
+    common.LOGGER.system(message=f"extension selected: {selected_extension}")
 
     # open extension options
+    common.LOGGER.system(message="opening extension options")
     selected_extension.shadow_root.find_element(By.CSS_SELECTOR, "#detailsButton").click()
     common.wait_page_to_be(driver_, "?id=")
     if return_id:
         return driver_.current_url.split("?id=")[1].strip()
+    common.LOGGER.system(message=f"extension options opened: {driver_.current_url}")
 
     left_panel_shadow = extension_manager_element_shadow.shadow_root.find_element(By.CSS_SELECTOR, "extensions-sidebar")
     keyboard_shortcuts = left_panel_shadow.shadow_root.find_element(By.CSS_SELECTOR, "a#sectionsShortcuts")
@@ -77,6 +84,7 @@ def set_adapter_shortcut(driver_, extension_text, return_id=False):
     if not selected_extension_card:
         raise Exception(f"card for {extension_text} extension not found")
 
+    common.LOGGER.system(message="setting extension shortcut...")
     action = ActionChains(driver_)
     edit_shortcut_shadow = selected_extension_card.find_element(By.CSS_SELECTOR, "extensions-shortcut-input")
     edit_shortcut_button = edit_shortcut_shadow.shadow_root.find_element(By.CSS_SELECTOR, "cr-icon-button#edit")
@@ -86,9 +94,11 @@ def set_adapter_shortcut(driver_, extension_text, return_id=False):
         .send_keys('i')\
         .key_up(adapter_login_steps.PLATFORM_HOTKEYS.get(driver_.caps.get('platformName'))[0])\
         .perform()
+    common.LOGGER.system(message="extension shortcut set")
 
 
 def set_adapter_url(driver_, extension_id):
+    common.LOGGER.system(message=f"setting adapter url...")
     lab_config = f"configuration/lab/{common.get_config_file_section('config.yml', 'configuration').get('lab')}.yml"
     adapter_url = common.get_config_file_section(lab_config, 'configuration').get('adapter_login_url')
     if not adapter_url:
@@ -110,6 +120,7 @@ def set_adapter_url(driver_, extension_id):
         assert input_url.get_attribute('value') == adapter_url, "COULD NOT SET THE CORRECT URL"
     driver_.find_element(By.XPATH, "//button[@id='save']").click()
     common.wait_element_attribute_contains(driver_, "//mark[@id='status']", 'innerText', "Options Saved")
+    common.LOGGER.system(message=f"adapter url set: {adapter_url}")
     tab_info = {'title': driver_.title,
                 'browser_number': int(common.get_driver_by_instance(driver_))}
     common.BROWSER_TABS[driver_.current_window_handle] = tab_info
