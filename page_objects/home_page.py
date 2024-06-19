@@ -7,7 +7,6 @@ class HomePage(object):
         self.logout_element = "//a[@id='page_logout']"
         self.agent_span = "//span[@id='app_agent_span']"
         self.web_agent_item = "//a[@id='web_agent_item']"
-        self.logout_element = "//a[@id='page_logout']"
         self.url = "https://env.frk1.eu.five9.com/"
 
     def open_page(self):

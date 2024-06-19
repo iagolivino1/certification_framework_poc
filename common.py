@@ -9,8 +9,40 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
 
-TEST_INFO = {}
-BROWSER_TABS = {}
+class CommonLogger:
+    def __init__(self):
+        self.__logger = None
+        self.message = ''
+
+    def set_logger(self, logger):
+        self.__logger = logger
+
+    def system(self, message):
+        self.__logger.warning(f'[SYSTEM] {message}')
+
+    def agent(self, agent='None', message=None):
+        self.__logger.info(f'[{str(agent).upper()}] {message}')
+
+    def debug(self, agent=None, message=None):
+        msg = f'[DEBUG] [{agent.upper()}] {message}' if agent else f'[DEBUG] {message}'
+        self.__logger.debug(msg)
+
+    def info(self, agent=None, message=None):
+        msg = f'[INFO] [{agent.upper()}] {message}' if agent else f'[INFO] {message}'
+        self.__logger.info(msg)
+
+    def warning(self, agent=None, message=None):
+        msg = f'[WARN] [{agent.upper()}] {message}' if agent else f'[WARN] {message}'
+        self.__logger.warning(msg)
+
+    def error(self, agent='', message=None):
+        msg = f'[ERROR] [{agent.upper()}] {message}' if agent else f'[ERROR] {message}'
+        self.__logger.error(msg)
+
+
+def check_log_dir(path):
+    if not os.path.isdir(path + 'logs/'):
+        os.mkdir(path + 'logs/')
 
 
 def read_configuration_file(file_name):
@@ -189,6 +221,7 @@ def element_recursive_click(driver_, element_xpath, click_times=1):
 def system_wait(time_to_wait=1):
     sleep(time_to_wait)
 
+
 def check_window_is_open(driver_, window_name):
     for handle in driver_.window_handles:
         title = driver_.title
@@ -197,6 +230,7 @@ def check_window_is_open(driver_, window_name):
         else:
             driver_.switch_to.window(handle)
     return False
+
 
 def find_and_switch_to_frame(driver_, frame_name):
     iframes = driver_.find_elements(By.XPATH, "//iframe")
@@ -214,3 +248,8 @@ def find_and_switch_to_frame(driver_, frame_name):
         if iframe.get_property("name") == frame_name:
             switch_to_frame(driver_, iframe)
             return
+
+
+TEST_INFO = {}
+BROWSER_TABS = {}
+LOGGER = CommonLogger()

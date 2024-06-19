@@ -15,16 +15,17 @@ def handle_adapter_dnc_number():
     try:
         common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.do_not_call_dial_button)
         ADAPTER_PAGE.get_do_not_call_dial_button().click()
-    except NoSuchElementException:
-        print("DNC dialog did not appear!")
-    except TimeoutException:
-        print("DNC dialog did not appear!")
+    except (NoSuchElementException, TimeoutException) as e:
+        common.LOGGER.warning(agent=common_steps.get_agent_for_logs(), message=f"DNC dialog did not appear | {e}")
+
 
 def handle_call():
+    frame_name = 'SoftphoneIframe'
     ADAPTER_PAGE.driver.refresh()
     common.system_wait(5)
     common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.adapter_iframe)
-    common.find_and_switch_to_frame(ADAPTER_PAGE.driver, "SoftphoneIframe")
+    common.find_and_switch_to_frame(ADAPTER_PAGE.driver, frame_name)
+    common.LOGGER.warning(agent=common_steps.get_agent_for_logs(), message=f'switched to frame {frame_name}')
 
 
 def handle_tools_button(action='open'):
@@ -39,8 +40,8 @@ def handle_tools_button(action='open'):
                 tools_button.click()
         else:
             raise Exception("TOOLS BUTTON WAS NOT PROPERLY LOADED!")
-    except TimeoutException:
-        print("tools (more | less) button was not visible at this time")
+    except TimeoutException as e:
+        common.LOGGER.warning(agent=common_steps.get_agent_for_logs(), message=f"tools (more | less) button was not visible at this time | exception: {e}")
 
 
 @when(parsers.parse("I select {station} for adapter station type"))
@@ -57,6 +58,7 @@ def select_adt_station(station):
         common.click_element(ADAPTER_PAGE.driver, getattr(ADAPTER_PAGE, f'get_{station.lower().strip()}_station_option')())
         common.system_wait(0.5)
     assert is_selected, f"STATION WAS NOT SELECTED PROPERLY: {station}"
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"station type selected: {station}")
     agent_ = common_steps.get_agent_by_driver(ADAPTER_PAGE.driver)
     agent_['station'] = station
 
@@ -70,6 +72,7 @@ def configure_station_number(station_number):
     common.click_element(ADAPTER_PAGE.driver, ADAPTER_PAGE.get_remember_my_selection_checkbox())
     common.wait_element_attribute_contains(ADAPTER_PAGE.driver, ADAPTER_PAGE.remember_my_selection_checkbox, 'checked', 'true')
     assert ADAPTER_PAGE.get_station_number_input().get_attribute('value') == station_number, f"STATION NUMBER WAS NOT SET PROPERLY: {station_number}"
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"station id filled: {station_number}")
     agent_ = common_steps.get_agent_by_driver(ADAPTER_PAGE.driver)
     agent_['station'] = {'station_type': agent_.get('station'), 'station_id': station_number}
 
@@ -87,6 +90,7 @@ def confirm_selection():
             try:
                 if ADAPTER_PAGE.get_confirm_selection_button().is_enabled():
                     ADAPTER_PAGE.get_confirm_selection_button().click()
+                    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="station options successfully selected")
                     return
                 try:
                     if "Connecting" in ADAPTER_PAGE.get_station_connection_status().text:
@@ -94,21 +98,24 @@ def confirm_selection():
                         if common.wait_element_to_be_enabled(ADAPTER_PAGE.driver, ADAPTER_PAGE.reset_station_button):
                             assert 'green' in ADAPTER_PAGE.get_station_connection_status().get_attribute('class')
                             assert 'Connected' in ADAPTER_PAGE.get_station_connection_status().get_attribute('innerText')
+                            common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="station check status passed")
                             break
                 except StaleElementReferenceException:
                     pass
-            except TimeoutException:
-                print(f"station {station_id} not connected. retry #{time_}")
-                ADAPTER_PAGE.get_reset_station_button().click()
-            except AssertionError:
-                print(f"station {station_id} not connected. retry #{time_}")
+            except (TimeoutException, AssertionError) as e:
+                common.LOGGER.warning(agent=common_steps.get_agent_for_logs(),
+                                      message=f"station {station_id} not connected. retry #{time_} | exception: {e}")
+                if 'Assertion' not in str(e):
+                    ADAPTER_PAGE.get_reset_station_button().click()
     common.wait_element_to_be_clickable(ADAPTER_PAGE.driver, ADAPTER_PAGE.confirm_selection_button, 60)
     ADAPTER_PAGE.get_confirm_selection_button().click()
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="station options successfully selected")
 
 
 @when(parsers.parse("I select {skill} skill in adapter"))
 def select_adt_skill(skill):
     global NUMBER_OF_SELECTED_SKILLS
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"selecting {skill} skill in adapter")
     common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.content_header)
     common.wait_page_element_load(ADAPTER_PAGE.driver, common_steps.COMMON_PAGE.all_skills_button, 120)
     selected_skill = None
@@ -126,6 +133,7 @@ def select_adt_skill(skill):
         NUMBER_OF_SELECTED_SKILLS = len(common_steps.COMMON_PAGE.get_available_skills())
     else:
         NUMBER_OF_SELECTED_SKILLS += 1
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"{skill} skill selected")
 
 
 @when("I confirm the skills selection")
@@ -134,6 +142,7 @@ def confirm_skills_selection():
     assert confirm_skills_number_label == NUMBER_OF_SELECTED_SKILLS, \
         f"NUMBER OF SELECTED SKILLS IS NOT CORRECT IN THE BUTTON LABEL: BL: {confirm_skills_number_label} | SS: {NUMBER_OF_SELECTED_SKILLS}"
     ADAPTER_PAGE.get_confirm_selection_button().click()
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="skills selection confirmed")
 
 
 @when("I see the adapter agent home page")
@@ -155,6 +164,7 @@ def fill_call_number(number):
     ADAPTER_PAGE.get_contact_call_input().send_keys(Keys.ESCAPE)
     assert ADAPTER_PAGE.get_contact_call_input().get_attribute('value') == number, f"COULD NOT FILL THE CALL NUMBER: {number}"
     CALL_NUMBER = number
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"number {number} filled")
 
 
 @when(parsers.parse("I select {campaign} campaign in adapter"))
@@ -171,6 +181,7 @@ def select_adt_campaign(campaign):
     common.click_element(ADAPTER_PAGE.driver, selected_campaign)
     if campaign not in ADAPTER_PAGE.get_select_campaign_button().text:
         raise Exception(f"CAMPAIGN WAS FOUND BUT COULD NOT BE SELECTED: {campaign}")
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"campaign {campaign} selected in adapter")
 
 
 @when("I select dial number button")
@@ -179,6 +190,8 @@ def select_dial_number_button():
     common.click_element(driver_=ADAPTER_PAGE.driver, element=ADAPTER_PAGE.get_dial_button())
     handle_adapter_dnc_number()
     common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.agent_call_panel)
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="starting call...")
+
 
 @when("I select dial number button on sf")
 def select_dial_number_button_sf():
@@ -186,6 +199,8 @@ def select_dial_number_button_sf():
     ADAPTER_PAGE.get_dial_button().click()
     handle_call()
     common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.agent_call_panel)
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="starting call...")
+
 
 @when("I select adapter script button")
 def select_script_button():
@@ -193,6 +208,7 @@ def select_script_button():
     common.wait_element_to_be_clickable(ADAPTER_PAGE.driver, ADAPTER_PAGE.script_button)
     ADAPTER_PAGE.get_script_button().click()
     common_steps.check_new_tab()
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="script window opened")
 
 
 @when("I select adapter worksheet button")
@@ -201,6 +217,7 @@ def select_worksheet_button():
     common.wait_element_to_be_clickable(ADAPTER_PAGE.driver, ADAPTER_PAGE.worksheet_button)
     ADAPTER_PAGE.get_worksheet_button().click()
     common_steps.check_new_tab()
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="worksheet window opened")
 
 
 @when("I open adapter disposition options")
@@ -215,12 +232,14 @@ def select_adapter_disposition(disposition):
     assert len(ADAPTER_PAGE.get_dispositions_list()) > 0, "NO OPTIONS IS AVAILABLE IN DISPOSITIONS LIST"
     common.click_element(ADAPTER_PAGE.driver, ADAPTER_PAGE.get_selected_disposition(text=disposition))
     assert ADAPTER_PAGE.get_selected_disposition(text=disposition).is_selected(), f"DISPOSITION WAS NOT PROPERLY SELECTED: {disposition}"
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"adapter disposition {disposition} selected")
 
 
 @when("I end adapter call interaction")
 def click_adapter_end_call_interaction():
     common.wait_element_to_be_clickable(ADAPTER_PAGE.driver, ADAPTER_PAGE.end_call_interaction_button)
     ADAPTER_PAGE.get_end_call_interaction_button().click()
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="adapter call ended")
 
 
 @when(parsers.parse("I change adapter agent state to ready for {state}"))
@@ -241,6 +260,7 @@ def change_adapter_agent_ready_state(state):
     assert selected_state_checkbox.get_attribute('checked') == 'true', f"STATE COULD NOT BE SELECTED: {state}"
     ADAPTER_PAGE.get_confirm_selection_button().click()
     common.wait_element_class_contains(ADAPTER_PAGE.driver, ADAPTER_PAGE.agent_state_button, 'btn-green')
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"agent state {state} selected")
 
 
 @when("I accept the inbound call in adapter")
@@ -252,6 +272,8 @@ def accept_adapter_inbound_call():
     assert ADAPTER_PAGE.get_active_call_type().text.strip() == 'On Call', f"ACTIVE CALL LABEL IS NOT CORRECT: {ADAPTER_PAGE.get_active_call_type().text.strip()}"
     # update call number
     CALL_NUMBER = ADAPTER_PAGE.get_active_caller_name().text.strip()
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"call from {CALL_NUMBER} received")
+
 
 @when("I accept the inbound call in SF adapter")
 def accept_sf_adapter_inbound_call():
@@ -263,9 +285,12 @@ def accept_sf_adapter_inbound_call():
     assert ADAPTER_PAGE.get_active_call_type().text.strip() == 'On Call', f"ACTIVE CALL LABEL IS NOT CORRECT: {ADAPTER_PAGE.get_active_call_type().text.strip()}"
     # update call number
     CALL_NUMBER = ADAPTER_PAGE.get_active_caller_name().text.strip()
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"call from {CALL_NUMBER} received")
+
 
 @when("I switch to adapter Iframe")
 def switch_to_iframe():
     common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.adapter_iframe,60)
     common.switch_to_frame(ADAPTER_PAGE.driver, ADAPTER_PAGE.get_iframe_softphone())
     common.wait_page_element_load(ADAPTER_PAGE.driver, ADAPTER_PAGE.adapter_logo)
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"switched to adapter iframe")

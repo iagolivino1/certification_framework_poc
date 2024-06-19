@@ -13,9 +13,10 @@ def check_adt_basic_calls():
     common_steps.STARTED_PAGES.append(call_interaction_steps.CALL_INTERACTION_PAGE)
 
     # find the extension
+    common.LOGGER.system(message="starting adapter setup")
     for _driver in driver.DRIVERS:
         driver_ = driver.DRIVERS.get(_driver).get('instance')
         common_steps.set_adapter_shortcut(driver_, adapter_login_steps.EXTENSION_NAME)
         common_steps.set_adapter_url(driver_, common_steps.set_adapter_shortcut(driver_, adapter_login_steps.EXTENSION_NAME, True), adapter_login_steps.ADAPTER_LOGIN_PAGE)
-
+    
     adapter_login_steps.launch_adapter()

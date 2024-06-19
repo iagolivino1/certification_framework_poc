@@ -17,11 +17,15 @@ def check_worksheet_window():
         for question in WORKSHEET_QUESTIONS:
             assert ADAPTER_WORKSHEET_PAGE.get_worksheet_answers_textarea().text == WORKSHEET_QUESTIONS.get(question), \
                 "WORKSHEET ANSWERS WERE NOT SAVED!"
+            common.LOGGER.info(agent=common_steps.get_agent_for_logs(),
+                               message=f"worksheet answer for question '{question}' "
+                                       f"found: '{ADAPTER_WORKSHEET_PAGE.get_worksheet_answers_textarea().text}'")
             if ADAPTER_WORKSHEET_PAGE.get_worksheet_next_button().is_enabled():
                 ADAPTER_WORKSHEET_PAGE.get_worksheet_next_button().click()
             common.system_wait(1)
         # reset questions after the validation. avoid false positive if a new call is done.
         WORKSHEET_QUESTIONS = {}
+        common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="worksheet questions reset")
 
 
 @when("I fill the adapter worksheet")
@@ -29,6 +33,7 @@ def fill_adt_worksheet():
     # set questions
     for question_ in ADAPTER_WORKSHEET_PAGE.get_worksheet_questions():
         WORKSHEET_QUESTIONS[question_.text.strip()] = ''
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"worksheet questions set: {WORKSHEET_QUESTIONS}")
 
     # answer questions
     has_next_question = ADAPTER_WORKSHEET_PAGE.get_worksheet_next_button().is_enabled()
@@ -41,6 +46,7 @@ def fill_adt_worksheet():
         if has_next_question:
             ADAPTER_WORKSHEET_PAGE.get_worksheet_next_button().click()
             common.system_wait(1)
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"worksheet answers set: {WORKSHEET_QUESTIONS}")
     ADAPTER_WORKSHEET_PAGE.get_worksheet_finish_button().click()
     # TODO: check this behaviour
     common_steps.update_number_of_tabs(ADAPTER_WORKSHEET_PAGE.driver)
