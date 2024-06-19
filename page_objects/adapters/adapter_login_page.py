@@ -10,8 +10,8 @@ class AdapterLoginPage(object):
         self.adapter_login_button = "//button[contains(@id,'login_btn')]"
         self.force_login_button = "//button[@id='force-login']"
 
-    def open_page(self, url="https://qaapp01d.five9lab.com/clients/integrations/adt.main.html"):
-        self.driver.get(url)
+    def open_page(self):
+        self.driver.get(self.url)
 
     def get_adapter_user_input(self):
         return self.driver.find_element(By.XPATH, self.adapter_user_input)

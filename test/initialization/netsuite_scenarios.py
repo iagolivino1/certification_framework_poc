@@ -22,6 +22,7 @@ def check_netsuite_basic_calls():
 
     try:
         sf_login_steps.AGENT_CREDENTIALS = get_config_file_section(lab_config, 'ns_credentials')
+        sf_login_steps.LOGIN_PAGE.url = sf_login_steps.LOGIN_PAGE.ns_url
     except KeyError as e:
         print(f'could not find "credentials" section in {driver.CONFIG_FILE}.\n{e}\nusing the default...')
         sf_login_steps.AGENT_CREDENTIALS = get_config_file_section('config.yml', 'credentials')

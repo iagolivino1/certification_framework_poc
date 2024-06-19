@@ -18,6 +18,8 @@ def check_additional_authentication():
 
 @given("I am in SF login page")
 @when("I am in SF login page")
+@given("I am in NetSuite login page")
+@when("I am in NetSuite login page")
 def see_sf_login_page():
     LOGIN_PAGE.open_page()
     common.wait_page_element_load(LOGIN_PAGE.driver, LOGIN_PAGE.login_button)
@@ -35,9 +37,3 @@ def perform_login():
 def see_home_page():
     check_additional_authentication()
     common.wait_element_to_be_clickable(LOGIN_PAGE.driver, LOGIN_PAGE.logo_img)
-
-@given("I am in NetSuite login page")
-@when("I am in NetSuite login page")
-def see_sf_login_page():
-    LOGIN_PAGE.open_page(LOGIN_PAGE.ns_url)
-    common.wait_page_element_load(LOGIN_PAGE.driver, LOGIN_PAGE.login_button)

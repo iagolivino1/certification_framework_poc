@@ -7,14 +7,14 @@ class SFLoginPage(object):
         self.pass_input = "//input[@id='password']"
         self.login_button = "//input[@id='Login'] | //button[@id='submitButton']"
         self.logo_img = "//img[@id='phHeaderLogoImage'] | //div[@id='uif35']"
-        self.sf_url = "https://login.salesforce.com/"
+        self.url = "https://login.salesforce.com/"
         self.ns_url = "https://system.netsuite.com/pages/customerlogin.jsp?country=US"
         self.ns_additional_auth_title = "//div[@class='roleswitch-title']/h1"
         self.ns_additional_pass = "//input[@name='answer']"
         self.ns_additional_submit_btn = "//input[@name='submitter']"
 
-    def open_page(self, url="https://login.salesforce.com/"):
-        self.driver.get(url)
+    def open_page(self):
+        self.driver.get(self.url)
 
     def get_salesforce_url(self):
         return self.sf_url
