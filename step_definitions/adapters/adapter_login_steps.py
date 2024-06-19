@@ -17,6 +17,7 @@ PLATFORM_HOTKEYS = {
     'linux': [Keys.CONTROL, 'control']
 }
 EXTENSION_NAME = "Five9 Agent Desktop Toolkit"
+NS_EXTENSION_NAME = "Five9Lab Plus Adapter for NetSuite"
 
 def check_force_login(agent):
     try:

@@ -4,8 +4,7 @@ from selenium.webdriver.common.by import By
 class AdapterLoginPage(object):
     def __init__(self, driver=None):
         self.driver = driver
-        self.adt_url = "https://qaapp01d.five9lab.com/clients/integrations/adt.main.html"
-        self.ns_url = "qaapp11d.five9lab.com"
+        self.url = "https://qaapp01d.five9lab.com/clients/integrations/adt.main.html"
         self.adapter_user_input = "//input[@id='username']"
         self.adapter_pass_input = "//input[@id='password']"
         self.adapter_login_button = "//button[contains(@id,'login_btn')]"
