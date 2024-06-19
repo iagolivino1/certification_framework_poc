@@ -1,8 +1,11 @@
 from pytest_bdd import when, then
 from selenium.webdriver import Keys
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.common.by import By
 
 import common
+import pyautogui
+import driver
 from page_objects.adapters.adapter_login_page import AdapterLoginPage
 from step_definitions import common_steps
 from step_definitions.adapters import adapter_steps
@@ -64,3 +67,21 @@ def adapter_logout():
                 agent_info['driver'] = None
                 agent_info['login_type'] = None
                 common_steps.AGENT_CREDENTIALS[agent_] = agent_info
+
+@when("I launch the adapter")
+def launch_adapter():
+    # open the adapter window
+    for _driver in driver.DRIVERS:
+        driver_ = driver.DRIVERS.get(_driver).get('instance')
+        driver_.switch_to.window(driver_.current_window_handle)
+        for attempt in range(10):
+            common.wait_element_to_be_clickable(driver_, "//body")
+            common.click_element(driver_, driver_.find_element(By.TAG_NAME, "body"))
+            pyautogui.hotkey(
+                PLATFORM_HOTKEYS.get(driver_.caps.get('platformName'))[1], 'i')
+            common.system_wait(2)
+            if len(driver_.window_handles) > 1:
+                common.switch_tabs(driver_=driver_, tab_id=driver_.window_handles[1])
+                if driver_.title != 'Adapter':
+                    common.wait_page_element_load(driver_, "//*[@id='username']", 60)
+                    break

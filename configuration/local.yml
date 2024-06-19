@@ -10,7 +10,7 @@ configuration:
     test_name: <any_name>
 
 chrome_flags:
-    third_party_cookie_phaseout: --test-third-party-cookie-phaseout
+    # third_party_cookie_phaseout: --test-third-party-cookie-phaseout
     use-fake-ui-for-media-stream: --use-fake-ui-for-media-stream
 
 chrome_experimental:
@@ -19,3 +19,4 @@ chrome_experimental:
 chrome_extensions:
     softphone: 'softphone.crx'
     adt_plus: 'adt_plus.crx'
+    netsuite: 'netsuite.crx'
