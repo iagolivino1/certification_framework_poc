@@ -2,6 +2,7 @@ configuration:
   login_url: https://qalogin11.five9lab.com/
   direct_login_url: https://qaapp11.five9lab.com/?role=Agent
   adapter_login_url: https://qaapp11d.five9lab.com/clients/integrations/adt.main.html
+  adapter_ns_login_url: qaapp11d.five9lab.com
   chat_console_url: https://qaapp11.five9lab.com/five9_clients/consoles_latest/ChatConsole/ChatDemo.html?tenant=mci_qa02_autocert&profiles=<chat_camp>
   email_console_url: https://qaapp11.five9lab.com/consoles/EmailConsole/EmailDemo.html?tenant=mci_qa02_autocert&profiles=<chat_camp>
   connector_url: https://www.google.com/
@@ -23,7 +24,11 @@ credentials:
     outbound_camp: cert_out
 
 sf_credentials:
-    agent_0:
+  agent_0:
         user: <user>
         pass: <pass>
-    
+
+ns_credentials:
+  agent_0:
+      user: <user>
+      pass: <pass>

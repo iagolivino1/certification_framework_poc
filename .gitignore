@@ -1,7 +1,7 @@
 /.idea
 __pycache__/
+reports/
 .DS_Store
 *.yml
 *.crx
 /logs
-test/python/reports

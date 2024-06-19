@@ -250,29 +250,6 @@ def find_and_switch_to_frame(driver_, frame_name):
             return
 
 
-def find_and_switch_to_frame(driver_, frame_name):
-    iframes = driver_.find_elements(By.XPATH, "//iframe")
-    
-    if len(iframes) == 0:
-        driver_.refresh()
-        wait_page_to_be_loaded(driver_)
-        iframes = driver_.find_elements(By.XPATH, "//iframe")
-
-        if len(iframes) == 0:
-            raise NoSuchElementException
-
-    for index, iframe in enumerate(iframes):
-        # print(iframe)
-        if iframe.get_property("name") == frame_name:
-            switch_to_frame(driver_, iframe)
-            return
-
-
 TEST_INFO = {}
 BROWSER_TABS = {}
 LOGGER = CommonLogger()
-'''current_path = os.path.dirname(os.path.realpath(__file__)) + os.sep
-check_log_dir(current_path)
-log_file_path = f"{current_path}logs/log_{str(datetime.datetime.now()).replace(' ','_').replace(':','').split('.')[0]}.log"
-logging.basicConfig(filename=log_file_path, filemode='w', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-LOGGER.logger = logging.getLogger(__name__)'''

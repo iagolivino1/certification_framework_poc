@@ -1,6 +1,7 @@
 configuration:
     login_url: https://qalogin01.five9lab.com/
-    adapter_login_url: https://qaapp11d.five9lab.com/clients/integrations/adt.main.html
+    adapter_login_url: https://qaapp01d.five9lab.com/clients/integrations/adt.main.html
+    adapter_ns_login_url: qaapp01d.five9lab.com
     chat_console_url: https://qaapp01.five9lab.com/consoles/ChatConsole/ChatDemo.html?tenant=iferreira_lab&profiles=iferreira_chat
     email_console_url: https://qaapp01.five9lab.com/five9_clients/consoles_latest/EmailConsole/EmailDemo.html?tenant=iferreira_lab&profiles=iferreira_chat
     connector_url: https://www.google.com/
@@ -21,6 +22,11 @@ credentials:
         outbound_camp: <outbound>
 
 sf_credentials:
+    agent_0:
+        user: <user>
+        pass: <pass>
+
+ns_credentials:
     agent_0:
         user: <user>
         pass: <pass>
