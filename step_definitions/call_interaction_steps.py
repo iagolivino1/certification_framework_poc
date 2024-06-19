@@ -1,8 +1,5 @@
 import common
 import driver
-import time
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
 from pytest_bdd import parsers, when
 from selenium.webdriver import Keys
 from selenium.common import TimeoutException, NoSuchElementException

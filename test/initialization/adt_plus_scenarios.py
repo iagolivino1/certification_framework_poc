@@ -1,4 +1,5 @@
 import driver
+import common
 from step_definitions import common_steps, script_steps, call_interaction_steps
 from step_definitions.adapters import adapter_login_steps, adapter_steps, adapter_worksheet_steps
 from test.initialization import base_setup
