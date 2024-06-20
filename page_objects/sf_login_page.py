@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 
+
 class SFLoginPage(object):
     def __init__(self, driver=None):
         self.driver = driver
@@ -15,9 +16,6 @@ class SFLoginPage(object):
 
     def open_page(self):
         self.driver.get(self.url)
-
-    def get_salesforce_url(self):
-        return self.sf_url
     
     def get_netsuite_url(self):
         return self.ns_url

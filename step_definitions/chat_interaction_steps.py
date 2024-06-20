@@ -1,7 +1,7 @@
 import common
 from pytest_bdd import when
 from page_objects.chat_interaction_page import ChatInteractionPage
-from step_definitions import agent_steps
+from step_definitions import agent_steps, common_steps
 
 CHAT_INTERACTION_PAGE = ChatInteractionPage()
 CURRENT_NUMBER_OF_CHAT_INTERACTIONS = 0
@@ -14,8 +14,9 @@ def check_new_chat_interaction():
     for time_ in range(timeout):
         CHAT_INTERACTION_PAGE.get_refresh_chats_button().click()
         if len(CHAT_INTERACTION_PAGE.get_all_chat_interactions()) > CURRENT_NUMBER_OF_CHAT_INTERACTIONS:
-            print("CHAT INTERACTION FOUND!")
+            common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"chat interaction found")
             CURRENT_NUMBER_OF_CHAT_INTERACTIONS = len(CHAT_INTERACTION_PAGE.get_all_chat_interactions())
+            common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"current chat interactions: {CURRENT_NUMBER_OF_CHAT_INTERACTIONS}")
             return
         common.system_wait(1)
     raise Exception(f"COULD NOT FIND CHAT INTERACTION DURING {timeout} SECONDS.")
@@ -27,6 +28,7 @@ def select_newest_chat_interaction(start_message):
     CHAT_INTERACTION_PAGE.get_newest_chat_interaction().click()
     common.wait_page_element_load(CHAT_INTERACTION_PAGE.driver, CHAT_INTERACTION_PAGE.conversation_content)
     common.wait_element_attribute_contains(CHAT_INTERACTION_PAGE.driver, CHAT_INTERACTION_PAGE.conversation_content, 'innerText', start_message)
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"chat with message '{start_message}' started")
 
 
 @when("I reply the chat message")
@@ -35,6 +37,7 @@ def reply_chat(reply_message):
     common.switch_tabs(CHAT_INTERACTION_PAGE.driver, tab_title='Agent Desktop Plus')
     CHAT_INTERACTION_PAGE.get_reply_message_textarea().send_keys(reply_message)
     CHAT_INTERACTION_PAGE.get_send_message_button().click()
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"chat replied with message: '{reply_message}'")
 
 
 @when("I dispose the chat interaction")
@@ -45,3 +48,4 @@ def dispose_chat():
     common.wait_page_element_load(CHAT_INTERACTION_PAGE.driver, agent_steps.AGENT_HOME.no_disposition_option)
     agent_steps.AGENT_HOME.get_no_disposition_option().click()
     common.wait_elements_to_be_less_than(CHAT_INTERACTION_PAGE.driver, CHAT_INTERACTION_PAGE.newest_chat_interaction, 1)
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message="chat interaction disposed")

@@ -20,6 +20,7 @@ def select_station_type(station_type):
         STATION_SETUP.get_gateway_station_type().click()
     else:
         raise Exception('station type not valid!')
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"station type selected: {station_type}")
 
 
 @when(parsers.parse("I configure station with {id_} id"))
@@ -33,4 +34,6 @@ def configure_station_id(id_):
     common_steps.wait_modal_dialog_open('station_check', 30)
     common.wait_element_to_be_clickable(STATION_SETUP.driver, STATION_SETUP.station_tone_check_status, 60)
     assert STATION_SETUP.get_station_tone_check_status().text == "Connection Successful"
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"station connection success")
     common.wait_element_to_be_clickable(STATION_SETUP.driver, STATION_SETUP.restart_station_button, 60)
+    common.LOGGER.info(agent=common_steps.get_agent_for_logs(), message=f"station id selected: {id_}")
